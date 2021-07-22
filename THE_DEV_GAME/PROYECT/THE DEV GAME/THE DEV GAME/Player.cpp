@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "TextureManager.h"
 
 void Player::initVariables() {
 	this->animState = PLAYER_ANIMATION_STATES::IDLE;
@@ -76,6 +77,7 @@ const sf::FloatRect Player::getColliderlobalBounds() const {
 
 void Player::setPosition(const float x, const float y) {
 	this->sprite.setPosition(x,y);
+	this->colliderRect.setPosition(x, y);
 }
 
 void Player::setCanJump(bool var) {
@@ -121,6 +123,7 @@ void Player::updatePhysics() {
 	}
 }
 
+// MANAGE THE PLAYER MOVEMENT 
 void Player::updateMovement() {
 	this->animState = IDLE;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
@@ -132,7 +135,9 @@ void Player::updateMovement() {
 		this->animState = MOVING_RIGHT;
 	}
 
+	// Pass the movement to the elements
 	this->sprite.move(this->velocity);
+	this->colliderRect.move(this->velocity);
 
 	// Jumping Code
 
@@ -143,6 +148,7 @@ void Player::updateMovement() {
 
 	if (isJumping) {
 		this->sprite.move(0.f, -currentJumpForce);
+		this->colliderRect.move(0.f, -currentJumpForce);
 		this->currentJumpForce -= jumpDecay;
 		if (canJump) {
 			if (this->jumpDecayTimer.getElapsedTime().asSeconds() >= 0.1f) {
@@ -211,11 +217,15 @@ void Player::updateAnimations() {
 }
 
 void Player::update() {
-	sf::Vector2f colliderPos(this->sprite.getPosition().x, this->sprite.getPosition().y);
-	this->colliderRect.setPosition(colliderPos);
 	this->updateMovement();
+	this->updateSprite();
 	this->updateAnimations();
 	this->updatePhysics();
+}
+
+void Player::updateSprite() {
+	//sf::Vector2f colliderPivot = sf::Vector2f((colliderRect.getPosition().x - (colliderRect.getGlobalBounds().width / 2)), (colliderRect.getPosition().y - colliderRect.getGlobalBounds().height));
+	//this->sprite.setPosition(colliderPivot);
 }
 
 void Player::render(sf::RenderTarget& target) {

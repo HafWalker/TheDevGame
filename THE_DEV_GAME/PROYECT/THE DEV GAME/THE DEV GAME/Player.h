@@ -60,6 +60,7 @@ public:
 	void updateMovement();
 	void updateAnimations();
 	void update();
+	void updateSprite();
 	void render(sf::RenderTarget& taget);
 };
 

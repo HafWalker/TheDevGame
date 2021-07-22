@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "Game.h"
 
+Manager manager;
+auto& newPlayer(manager.addEntity());
+
 void Game::initVariables() {
-	
+	newPlayer.addComponent<Transform>();
 }
 
 void Game::initWindow() {
@@ -19,6 +22,7 @@ void Game::initPlayer() {
 }
 
 Game::Game() {
+	this->initVariables();
 	this->initWindow();
 	this->initTileMap();
 	this->initPlayer();
@@ -84,6 +88,8 @@ void Game::update() {
 
 	this->updatePlayer();
 	this->updateCollision();
+	manager.update();
+	std::cout << newPlayer.getComponent<Transform>().x() << std::endl;
 }
 
 void Game::renderPlayer() {

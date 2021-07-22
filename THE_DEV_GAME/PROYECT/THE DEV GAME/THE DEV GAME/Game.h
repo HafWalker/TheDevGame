@@ -9,7 +9,7 @@ class Game
 private:
 	sf::RenderWindow window;
 	sf::Event ev;
-	
+
 	Player* player;
 	TileMap tileMap;
 

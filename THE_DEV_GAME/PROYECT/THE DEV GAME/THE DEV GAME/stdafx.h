@@ -9,3 +9,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
+
+#include "TextureManager.h"
+#include "ECS.h"
+#include "Components.h"
