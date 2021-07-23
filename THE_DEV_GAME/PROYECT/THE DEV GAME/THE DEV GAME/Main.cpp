@@ -8,10 +8,12 @@ int main() {
 	Game game;
 	
 	while (game.getWindow().isOpen()) {
+		game.updateDeltaTime();
 		game.update();
 		game.render();
 	}
 
+	std::cout << "EndGame" << std::endl;
 	//End of application
 	return 0;
 }

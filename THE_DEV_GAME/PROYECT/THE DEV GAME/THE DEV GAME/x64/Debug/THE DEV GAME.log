@@ -1,4 +1,12 @@
-﻿  TextureManager.cpp
-  TileMap.cpp
-  Generando código...
+﻿  Game.cpp
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\ECS.h(60,33): warning C4244: 'argumento': conversión de '_Ty' a 'float'; posible pérdida de datos
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\Game.cpp(30): message : Vea la referencia a la creación de una instancia de la función plantilla "T &Entity::addComponent<Transform,int,int,int,int,int>(int &&,int &&,int &&,int &&,int &&)" que se está compilando
+          with
+          [
+              T=Transform
+          ]
   THE DEV GAME.vcxproj -> C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\x64\Debug\THE DEV GAME.exe

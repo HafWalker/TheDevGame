@@ -10,6 +10,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
 
-#include "TextureManager.h"
 #include "ECS.h"
 #include "Components.h"
+#include "Vector2D.h"
+#include "Collision.h"

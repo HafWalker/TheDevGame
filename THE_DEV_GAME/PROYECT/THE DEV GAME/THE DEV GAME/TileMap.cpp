@@ -3,7 +3,7 @@
 
 TileMap::TileMap() {
 	// Initialize tilemap
-	std::cout << "init tilemap" << "\n";
+	std::cout << "Init tilemap" << "\n";
 	this->gridSizeF = 50.f;
 	this->gridSizeU = static_cast<unsigned>(this->gridSizeF);
 	this->maxSize.x = 16;

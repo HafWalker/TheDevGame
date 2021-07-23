@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Player.h"
-#include "TextureManager.h"
 
 void Player::initVariables() {
 	this->animState = PLAYER_ANIMATION_STATES::IDLE;
