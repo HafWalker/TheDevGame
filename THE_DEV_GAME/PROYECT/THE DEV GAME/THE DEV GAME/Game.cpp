@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Game.h"
+#include "Map.h"
 
 Manager manager;
 
@@ -8,9 +9,6 @@ Manager manager;
 std::vector<Collider2D*> Game::colliders;
 
 auto& newPlayer(manager.addEntity());
-auto& Tile0(manager.addEntity());
-auto& Tile1(manager.addEntity());
-auto& Tile2(manager.addEntity());
 
 void Game::initVariables() {
 	std::cout << "Init Variables" << std::endl;
@@ -19,13 +17,7 @@ void Game::initVariables() {
 	keyPressed_W = false;
 	keyPressed_S = false;
 
-	Tile0.addComponent<TileComponent>(0, 50*11, 50, 50, 0);
-	Tile0.addComponent<Collider2D>("Floor");
-	
-	Tile1.addComponent<TileComponent>(0, 0, 50, 50, 1);
-	
-	Tile2.addComponent<TileComponent>(50*5, 50*10, 50, 50, 2);
-	Tile2.addComponent<Collider2D>("Box");
+	Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16,12);
 
 	newPlayer.addComponent<Transform>(0, 0, 128, 128, 1);
 	newPlayer.addComponent<SpriteComponent>("D:/THE_DEV_GAME/PROYECT/Sprites/DefaultSprite.png");
@@ -152,6 +144,8 @@ void Game::updateCollision() {
 }
 
 void Game::AddTile(int id, int x, int y) {
+	auto& tile(manager.addEntity());
+	tile.addComponent<TileComponent>(x, y, 50, 50, id);
 }
 
 void Game::update() {
@@ -174,14 +168,10 @@ void Game::render() {
 	this->window.clear();
 
 	// Render
-	this->tileMap.render(this->window);
+	//this->tileMap.render(this->window);
 	this->renderPlayer();
 
 	this->window.draw(newPlayer.getComponent<SpriteComponent>().GetSprite());
-
-	this->window.draw(Tile0.getComponent<SpriteComponent>().GetSprite());
-	this->window.draw(Tile1.getComponent<SpriteComponent>().GetSprite());
-	this->window.draw(Tile2.getComponent<SpriteComponent>().GetSprite());
 
 	// COLLISION DEBUG
 	//this->window.draw(newPlayer.getComponent<Collider2D>().collider);

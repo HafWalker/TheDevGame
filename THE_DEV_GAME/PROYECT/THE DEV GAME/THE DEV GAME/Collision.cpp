@@ -16,7 +16,9 @@ bool Collision::AABB(const sf::RectangleShape& recA, const sf::RectangleShape& r
 
 bool Collision::AABB(const Collider2D& colA, const Collider2D& colB) {
 	if (AABB(colA.collider, colB.collider)) {
-		std::cout << colA.tag << " hit: " << colB.tag << std::endl;
+		if (colB.tag != "Player") {
+			std::cout << colA.tag << " hit: " << colB.tag << std::endl;
+		}
 		return true;
 	} else {
 		return false;
