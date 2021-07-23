@@ -19,12 +19,12 @@ void Game::initVariables() {
 	keyPressed_W = false;
 	keyPressed_S = false;
 
-	Tile0.addComponent<TileComponent>(128, 128, 128, 128, 0);
+	Tile0.addComponent<TileComponent>(0, 50*11, 50, 50, 0);
 	Tile0.addComponent<Collider2D>("Floor");
 	
-	Tile1.addComponent<TileComponent>(128+128, 128+128, 128, 128, 1);
+	Tile1.addComponent<TileComponent>(0, 0, 50, 50, 1);
 	
-	Tile2.addComponent<TileComponent>(128+128+128, 128+128+128, 128, 128, 2);
+	Tile2.addComponent<TileComponent>(50*5, 50*10, 50, 50, 2);
 	Tile2.addComponent<Collider2D>("Box");
 
 	newPlayer.addComponent<Transform>(0, 0, 128, 128, 1);
@@ -66,6 +66,7 @@ void Game::handleEvents() {
 	window.pollEvent(ev);
 	switch (ev.type) {
 	case sf::Event::Closed:
+		// Commented to prevent a weird bug (Open and instan close the game)
 		//this->window.close();
 		break;
 	case sf::Event::KeyPressed:
@@ -148,32 +149,12 @@ void Game::updateCollision() {
 			this->player->getPosition().y
 		);
 	}
+}
 
-	// Collision with Tiles
-	// Top Collision
-	//if((this->player->getPosition().y + this->player->getGlobalBounds().height > )
+void Game::AddTile(int id, int x, int y) {
 }
 
 void Game::update() {
-	// Polling event
-	/*while (this->window.pollEvent(this->ev)) {
-		if (this->ev.type == sf::Event::Closed) {
-			this->window.close();
-		}
-		else if (this->ev.type == sf::Event::KeyPressed && this->ev.key.code == sf::Keyboard::Escape) {
-			this->window.close();
-		}
-
-		if (this->ev.type == sf::Event::KeyReleased &&
-			(	this->ev.key.code == sf::Keyboard::A ||
-				this->ev.key.code == sf::Keyboard::D ||
-				this->ev.key.code == sf::Keyboard::W ||
-				this->ev.key.code == sf::Keyboard::S 
-			)) {
-			this->player->resetAnimationTimer();
-		}
-	}*/
-
 	this->handleEvents();
 	this->updatePlayer();
 	this->updateNewPlayer();
@@ -204,7 +185,7 @@ void Game::render() {
 
 	// COLLISION DEBUG
 	//this->window.draw(newPlayer.getComponent<Collider2D>().collider);
-	//this->window.draw(newWall.getComponent<Collider2D>().collider);
+	//this->window.draw(Tile0.getComponent<Collider2D>().collider);
 	//
 
 	this->window.display();

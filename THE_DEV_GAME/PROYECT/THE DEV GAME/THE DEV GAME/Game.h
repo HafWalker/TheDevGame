@@ -44,6 +44,8 @@ public:
 	void updatePlayer();
 	void updateCollision();
 
+	static void AddTile(int id, int x, int y);
+
 	void update();
 	void renderPlayer();
 	void render();

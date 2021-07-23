@@ -60,6 +60,9 @@
     <ClInclude Include="TileComponent.h">
       <Filter>Archivos de encabezado\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -85,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="Collision.cpp">
       <Filter>Archivos de encabezado</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
