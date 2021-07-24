@@ -43,5 +43,9 @@ public:
 		trasnform = &entity->getComponent<Transform>();
 		entity->addComponent<SpriteComponent>(path);
 		sprite = &entity->getComponent<SpriteComponent>();
+		if (tileID == 0) {
+			entity->addComponent<Collider2D>("Wall");
+		}
+		Game::Tiles.push_back(this);
 	}
 };

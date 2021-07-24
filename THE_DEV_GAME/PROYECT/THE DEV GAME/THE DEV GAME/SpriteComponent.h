@@ -2,23 +2,22 @@
 
 #include "stdafx.h"
 #include "Components.h"
+#include "Game.h"
 
 class SpriteComponent : public Component {
 private:
 	Transform* transform;
-	sf::Texture textureSheet; 
+	sf::Texture *textureSheet; 
 	sf::Sprite sprite;
 public:
 	SpriteComponent() = default;
 	SpriteComponent(const char* path) {
-		if (!textureSheet.loadFromFile(path)) {
-			std::cout << "ERROR LOADING TEXTURESHEET" << "\n";
-		}
-		sprite.setTexture(textureSheet);
+		textureSheet = TextureManager::LoadTexture(path);
+		sprite.setTexture(*textureSheet);
 	}
 
 	sf::Texture GetTexture() {
-		return textureSheet;
+		return *textureSheet;
 	}
 
 	sf::Sprite GetSprite() {
@@ -36,6 +35,6 @@ public:
 	}
 
 	void draw() override {
-		//TextureManager::RenderTexture(renderTarget, sprite);
+		//TextureManager::Draw(&sprite, // WIN);
 	}
 };

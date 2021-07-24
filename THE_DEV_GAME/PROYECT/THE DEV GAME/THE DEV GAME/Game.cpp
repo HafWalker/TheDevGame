@@ -7,6 +7,7 @@ Manager manager;
 //How To Make Games #13 Fix to events
 
 std::vector<Collider2D*> Game::colliders;
+std::vector<TileComponent*> Game::Tiles;
 
 auto& newPlayer(manager.addEntity());
 
@@ -18,21 +19,24 @@ void Game::initVariables() {
 	keyPressed_S = false;
 
 	Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16,12);
+	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level2_32x21.map", 32, 21);
+	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_TEST.map", 16, 12);
 
-	newPlayer.addComponent<Transform>(0, 0, 128, 128, 1);
-	newPlayer.addComponent<SpriteComponent>("D:/THE_DEV_GAME/PROYECT/Sprites/DefaultSprite.png");
+	newPlayer.addComponent<Transform>(100, 350, 100, 55, 1);
+	newPlayer.addComponent<SpriteComponent>("D:/THE_DEV_GAME/PROYECT/Sprites/StaticSprite.png");
 	newPlayer.addComponent<Collider2D>("Player");
+	newPlayer.addComponent<Rigidbody2D>();
 }
 
 void Game::initWindow() {
 	std::cout << "Init Window" << std::endl;
 	this->window.create(sf::VideoMode(800, 600), "The Dev Game", sf::Style::Close | sf::Style::Titlebar);
 	this->window.setFramerateLimit(60);
+	TextureManager::SetRenderTarget(&this->window);
 }
 
 void Game::initTileMap() {
 	std::cout << "Init TileMap (Empty)" << std::endl;
-	//this->tileMap = new TileMap();
 }
 
 void Game::initPlayer() {
@@ -91,6 +95,11 @@ void Game::updateNewPlayer() {
 			keyPressed_S = true;
 			newPlayer.getComponent<Transform>().velocity.Add(Vector2D(0.f, 1.f));
 		}
+
+		if (ev.key.code == sf::Keyboard::Space) {
+			keyPressed_W = true;
+			newPlayer.getComponent<Transform>().Translate(Vector2D(0.f, -3.f));
+		}
 	}
 	if (ev.type == sf::Event::KeyReleased) {
 		if (ev.key.code == sf::Keyboard::A && keyPressed_A) {
@@ -118,28 +127,19 @@ void Game::updatePlayer() {
 }
 
 void Game::updateCollision() {
-	// Collision bottom of screen
-	if (this->player->getPosition().y + this->player->getGlobalBounds().height > this->window.getSize().y) {
-		this->player->resetVelocityY();
-		this->player->setCanJump(true);
-		this->player->setPosition(
-			this->player->getPosition().x,
-			this->window.getSize().y - this->player->getGlobalBounds().height
-		);
-	}	// Collision Right of screen
-	else if (this->player->getPosition().x + this->player->getGlobalBounds().width > this->window.getSize().x) {
-		this->player->resetVelocityY();
-		this->player->setPosition(
-			this->window.getSize().x - this->player->getGlobalBounds().width,
-			this->player->getPosition().y
-		);
-	}	// Collision Left of screen
-	else if (this->player->getPosition().x + this->player->getGlobalBounds().width < 0.f + this->player->getGlobalBounds().width) {
-		this->player->resetVelocityY();
-		this->player->setPosition(
-			0.f,
-			this->player->getPosition().y
-		);
+	std::cout << "DEBUG - - - - - " << std::endl;
+	std::cout << "Velocity:" << newPlayer.getComponent<Transform>().velocity << std::endl;
+	std::cout << "Suppress:" << newPlayer.getComponent<Transform>().vectorCollision << std::endl;
+	for (auto cc : colliders) {
+		CollisionInfo collisionInfo;
+		collisionInfo = Collision::AABB(newPlayer.getComponent<Collider2D>(), *cc);
+		if (collisionInfo.isColliding) {
+			if (collisionInfo.tag != "Player") {
+				//std::cout << collisionInfo.diff << std::endl;
+				//newPlayer.getComponent<Transform>().DetectCollision(collisionInfo.displacement);
+				newPlayer.getComponent<Transform>().position += collisionInfo.displacement;
+			}
+		}
 	}
 }
 
@@ -154,10 +154,6 @@ void Game::update() {
 	this->updateNewPlayer();
 	this->updateCollision();
 	manager.update();
-
-	for (auto cc : colliders) {
-		Collision::AABB(newPlayer.getComponent<Collider2D>(), *cc);
-	}
 }
 
 void Game::renderPlayer() {
@@ -168,14 +164,20 @@ void Game::render() {
 	this->window.clear();
 
 	// Render
-	//this->tileMap.render(this->window);
 	this->renderPlayer();
 
+	for (auto cc : Tiles) {
+		this->window.draw(cc->entity->getComponent<SpriteComponent>().GetSprite());
+		if (cc->entity->hasComponents<Collider2D>()) {
+			this->window.draw(cc->entity->getComponent<Collider2D>().collider);
+		}
+	}
+
 	this->window.draw(newPlayer.getComponent<SpriteComponent>().GetSprite());
+	//TextureManager::Draw(newPlayer.getComponent<SpriteComponent>().GetSprite());
 
 	// COLLISION DEBUG
-	//this->window.draw(newPlayer.getComponent<Collider2D>().collider);
-	//this->window.draw(Tile0.getComponent<Collider2D>().collider);
+		this->window.draw(newPlayer.getComponent<Collider2D>().collider);
 	//
 
 	this->window.display();

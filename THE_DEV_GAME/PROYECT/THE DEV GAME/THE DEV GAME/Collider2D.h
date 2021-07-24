@@ -19,7 +19,11 @@ public:
 		}
 		transform = &entity->getComponent<Transform>();
 		Game::colliders.push_back(this);
-		collider.setFillColor(sf::Color::Green);
+
+		// For Debug
+		collider.setFillColor(sf::Color::Transparent);
+		collider.setOutlineColor(sf::Color::Green);
+		collider.setOutlineThickness(1.f);
 	}
 
 	void update() override {

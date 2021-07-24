@@ -14,3 +14,4 @@
 #include "Components.h"
 #include "Vector2D.h"
 #include "Collision.h"
+#include "TextureManager.h"

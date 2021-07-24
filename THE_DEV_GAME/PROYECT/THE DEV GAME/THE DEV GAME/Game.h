@@ -6,12 +6,14 @@
 #include <vector>
 
 class Collider2D;
+class TileComponent;
 
 class Game {
 private:
 	sf::Event ev;
-	sf::RenderWindow window;
 	sf::Clock deltaTimeclock;
+	sf::RenderWindow window;
+
 	float deltaTime;
 
 	// Keyboard booleans
@@ -34,6 +36,7 @@ public:
 	virtual ~Game();
 	
 	static std::vector<Collider2D*> colliders;
+	static std::vector<TileComponent*> Tiles;
 
 	//Func
 	void updateDeltaTime();
