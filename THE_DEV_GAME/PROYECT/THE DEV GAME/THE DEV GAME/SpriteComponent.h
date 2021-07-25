@@ -9,6 +9,10 @@ private:
 	Transform* transform;
 	sf::Texture *textureSheet; 
 	sf::Sprite sprite;
+	sf::RectangleShape spriteDebugBounds;
+
+	float xOffset;
+	float yOffset;
 public:
 	SpriteComponent() = default;
 	SpriteComponent(const char* path) {
@@ -34,11 +38,22 @@ public:
 
 	void SetFrame(sf::IntRect newFrame) {
 		this->sprite.setTextureRect(newFrame);
+		spriteDebugBounds.setFillColor(sf::Color::Transparent);
+		spriteDebugBounds.setOutlineColor(sf::Color::Red);
+		spriteDebugBounds.setOutlineThickness(1.f);
+		spriteDebugBounds.setPosition(this->sprite.getPosition());
+		spriteDebugBounds.setSize(sf::Vector2f(newFrame.width, newFrame.height));
+	}
+
+	void SetSpritePosition(float offsetX, float offsetY) {
+		this->xOffset = offsetX + sprite.getPosition().x;
+		this->yOffset = offsetY + sprite.getPosition().y;
+		sprite.setPosition(xOffset, yOffset);
+		spriteDebugBounds.setPosition(xOffset, yOffset);
 	}
 
 	void init() override {
 		transform = &entity->getComponent<Transform>();
-		sprite.setPosition(0.f, 0.f);
 	}
 
 	void update() override {
@@ -48,5 +63,9 @@ public:
 
 	void draw() override {
 		//TextureManager::Draw(&sprite, // WIN);
+	}
+
+	sf::RectangleShape GetDebugSpriteIntRect() {
+		return spriteDebugBounds;
 	}
 };

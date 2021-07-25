@@ -18,6 +18,8 @@ private:
 
 	// Keyboard booleans
 	bool keyPressed_Space;
+	bool isPlayerJumping;
+	bool inPlayerAttacking;
 
 	Player* player;
 	TileMap tileMap;

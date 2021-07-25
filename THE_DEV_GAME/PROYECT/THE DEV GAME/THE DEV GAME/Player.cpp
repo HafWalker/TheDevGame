@@ -13,7 +13,7 @@ void Player::initVariables() {
 }
 
 void Player::initTexture() {
-	if (!this->textureSheet.loadFromFile("D:/THE_DEV_GAME/PROYECT/Sprites/Animation/spritesheet_Full.png")) {
+	if (!this->textureSheet.loadFromFile("D:/THE_DEV_GAME/PROYECT/Sprites/StaticSprite.png")) {
 		std::cout << "ERROR PLAYER SHEET" << "\n";
 	}
 }
