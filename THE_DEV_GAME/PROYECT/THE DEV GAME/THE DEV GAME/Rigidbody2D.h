@@ -5,7 +5,7 @@
 
 class Rigidbody2D : public Component {
 public:
-	float gravity = 0.125f;
+	float gravity = 0.3f;
 	Transform* transform;
 
 	float gravityMaxSpeed;
@@ -23,7 +23,7 @@ public:
 		}
 		transform = &entity->getComponent<Transform>();
 
-		gravityMaxSpeed = 0.8f;
+		gravityMaxSpeed = 2.5f;
 		velocityMax = 15.f;
 		aceleration = 3.f;
 		velocityMin = 0.01f;
@@ -33,6 +33,7 @@ public:
 	void update() override {
 		transform->velocity.Add(Vector2D(0.f, gravity));
 		if (transform->velocity.y > gravityMaxSpeed) { transform->velocity.y = gravityMaxSpeed; }
+		Drag();
 	}
 
 	void move(Vector2D vectorDirection) {
@@ -42,6 +43,14 @@ public:
 		// Limit Velocity
 		if (std::abs(transform->velocity.x) > velocityMax) {
 			transform->velocity.x = velocityMax * ((transform->velocity.x < 0.f) ? -1.f : 1.f);
+		}
+
+		// Aceleration
+		transform->velocity.y += vectorDirection.y * aceleration;
+
+		// Limit Velocity
+		if (std::abs(transform->velocity.y) > velocityMax) {
+			transform->velocity.y = velocityMax * ((transform->velocity.y < 0.f) ? -1.f : 1.f);
 		}
 	}
 
@@ -56,21 +65,6 @@ public:
 		}
 		if (std::abs(transform->velocity.y) < velocityMin) {
 			transform->velocity.y = 0;
-		}
-	}
-
-	void Translate(Vector2D direction) {
-		// Aceleration
-		transform->velocity.x += direction.x * aceleration;
-		transform->velocity.y += direction.y * aceleration;
-
-		// Limit Velocity
-		if (std::abs(transform->velocity.x) > velocityMax) {
-			transform->velocity.x = velocityMax * ((transform->velocity.x < 0.f) ? -1.f : 1.f);
-		}
-
-		if (std::abs(transform->velocity.y) > velocityMax) {
-			transform->velocity.y = velocityMax * ((transform->velocity.y < 0.f) ? -1.f : 1.f);
 		}
 	}
 };

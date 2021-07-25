@@ -6,3 +6,4 @@
 #include "TileComponent.h"
 #include "Collider2D.h"
 #include "Rigidbody2D.h"
+#include "AnimatorComponent.h"

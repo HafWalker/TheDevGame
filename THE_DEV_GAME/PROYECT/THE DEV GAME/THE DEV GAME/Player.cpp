@@ -2,7 +2,7 @@
 #include "Player.h"
 
 void Player::initVariables() {
-	this->animState = PLAYER_ANIMATION_STATES::IDLE;
+	this->animState = ANIMATION_STATES::IDLE;
 
 	this->colliderRect = sf::RectangleShape(sf::Vector2f(64, 128));
 	this->colliderRect.setFillColor(sf::Color::Transparent);

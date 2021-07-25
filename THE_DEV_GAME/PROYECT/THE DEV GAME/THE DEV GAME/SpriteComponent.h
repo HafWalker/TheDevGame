@@ -24,6 +24,18 @@ public:
 		return sprite;
 	}
 
+	void SetOrigin(float xPos, float yPos) {
+		sprite.setOrigin(sf::Vector2f(xPos, yPos));
+	}
+
+	void SetScale(float xScale, float yScale) {
+		sprite.setScale(sf::Vector2f(xScale, yScale));
+	}
+
+	void SetFrame(sf::IntRect newFrame) {
+		this->sprite.setTextureRect(newFrame);
+	}
+
 	void init() override {
 		transform = &entity->getComponent<Transform>();
 		sprite.setPosition(0.f, 0.f);

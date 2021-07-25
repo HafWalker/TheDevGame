@@ -17,10 +17,7 @@ private:
 	float deltaTime;
 
 	// Keyboard booleans
-	bool keyPressed_A;
-	bool keyPressed_D;
-	bool keyPressed_W;
-	bool keyPressed_S;
+	bool keyPressed_Space;
 
 	Player* player;
 	TileMap tileMap;
@@ -44,7 +41,6 @@ public:
 	void handleEvents();
 	
 	void updateNewPlayer();
-	void updatePlayer();
 	void updateCollision();
 
 	static void AddTile(int id, int x, int y);

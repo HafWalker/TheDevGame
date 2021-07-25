@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatorComponent.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="Components.h" />
