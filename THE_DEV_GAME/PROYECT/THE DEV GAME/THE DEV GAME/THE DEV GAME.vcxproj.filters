@@ -16,6 +16,9 @@
     <Filter Include="Archivos de encabezado\ECS">
       <UniqueIdentifier>{f97f6152-11dc-4ab7-87c9-513a8fe3a3fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\States">
+      <UniqueIdentifier>{7c0e8936-9084-44e5-b636-a061142ba2ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -72,6 +75,15 @@
     <ClInclude Include="AnimatorComponent.h">
       <Filter>Archivos de encabezado\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Archivos de encabezado\States</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Archivos de encabezado\States</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenuState.h">
+      <Filter>Archivos de encabezado\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -103,6 +115,15 @@
     </ClCompile>
     <ClCompile Include="TextureManager.cpp">
       <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Archivos de encabezado\States</Filter>
+    </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>Archivos de encabezado\States</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenuState.cpp">
+      <Filter>Archivos de encabezado\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

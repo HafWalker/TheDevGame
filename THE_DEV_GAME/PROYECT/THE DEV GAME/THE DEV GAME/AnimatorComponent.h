@@ -55,7 +55,7 @@ public:
 
 	void update() override {
 		if (spriteComponent != nullptr) {
-			if (this->animationTimer.getElapsedTime().asSeconds() >= .125f || getAnimationSwitch()) {
+			if (this->animationTimer.getElapsedTime().asSeconds() >= .015f || getAnimationSwitch()) {
 				this->animationActive = true;
 				this->currentFrame.top = animationIndex * spriteRectY;
 				this->currentFrame.left += spriteRectX;
@@ -104,7 +104,6 @@ public:
 
 	void setAnimationState(ANIMATION_STATES state) {
 		this->animState = state;
-
 		switch (state)
 		{
 		case IDLE:

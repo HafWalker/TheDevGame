@@ -7,11 +7,7 @@ int main() {
 	
 	Game game;
 	
-	while (game.getWindow().isOpen()) {
-		game.updateDeltaTime();
-		game.update();
-		game.render();
-	}
+	game.run();
 
 	std::cout << "EndGame" << std::endl;
 	//End of application

@@ -18,7 +18,7 @@ public:
 			entity->addComponent<Transform>();
 		}
 		transform = &entity->getComponent<Transform>();
-		Game::colliders.push_back(this);
+		GameState::colliders.push_back(this);
 
 		// For Debug
 		collider.setFillColor(sf::Color::Transparent);

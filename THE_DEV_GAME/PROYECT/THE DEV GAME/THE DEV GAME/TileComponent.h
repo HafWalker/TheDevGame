@@ -46,6 +46,6 @@ public:
 		if (tileID == 0) {
 			entity->addComponent<Collider2D>("Wall");
 		}
-		Game::Tiles.push_back(this);
+		GameState::Tiles.push_back(this);
 	}
 };

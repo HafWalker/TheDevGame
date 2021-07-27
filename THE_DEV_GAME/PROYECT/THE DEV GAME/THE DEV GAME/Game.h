@@ -3,53 +3,55 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "TileMap.h"
+#include "State.h"
 #include <vector>
 
-class Collider2D;
-class TileComponent;
+#include "GameState.h"
+#include "MainMenuState.h"
+
+//class Collider2D;
+//class TileComponent;
 
 class Game {
 private:
 	sf::Event ev;
-	sf::Clock deltaTimeclock;
-	sf::RenderWindow window;
 
-	float deltaTime;
+	// Error de punteros por este
+	sf::RenderWindow* window;
+
+	sf::Clock dtClock;
+	float dt;
 
 	// Keyboard booleans
 	bool keyPressed_Space;
 	bool isPlayerJumping;
 	bool inPlayerAttacking;
 
-	Player* player;
-	TileMap tileMap;
-
 	void initVariables();
 	void initWindow();
-	void initTileMap();
-	void initPlayer();
+
+	//STATES
+
+	std::stack<State*> states;
+	void initStates();
 
 public:
 
 	Game();
 	virtual ~Game();
 	
-	static std::vector<Collider2D*> colliders;
-	static std::vector<TileComponent*> Tiles;
+	//static std::vector<Collider2D*> colliders;
+	//static std::vector<TileComponent*> Tiles;
 
 	//Func
 	void updateDeltaTime();
 
 	void handleEvents();
-	
-	void updateNewPlayer();
-	void updateCollision();
-
-	static void AddTile(int id, int x, int y);
 
 	void update();
-	void renderPlayer();
 	void render();
-	const sf::RenderWindow& getWindow() const;
+	void run();
+
+	//GAME METHODS
 };
 
