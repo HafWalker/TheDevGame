@@ -13,7 +13,7 @@ void Game::initWindow() {
 }
 
 void Game::initStates() {
-	this->states.push(new GameState(this->window));
+	this->states.push(new MainMenuState(this->window, &this->states));
 }
 
 Game::Game() {
@@ -74,7 +74,7 @@ void Game::render() {
 	this->window->clear();
 
 	if (!this->states.empty()) {
-		this->states.top()->render();
+		this->states.top()->render(this->window);
 	}
 
 	this->window->display();

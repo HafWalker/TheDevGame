@@ -26,7 +26,7 @@ void GameState::initVariables() {
 	newPlayer.addComponent<Rigidbody2D>();
 }
 
-GameState::GameState(sf::RenderWindow* window) : State(window) {
+GameState::GameState(sf::RenderWindow* window, std::stack<State*>* states) : State(window, states) {
 	this->window = window;
 	initVariables();
 }

@@ -1,15 +1,25 @@
 #pragma once
 #include "State.h"
+#include "Button.h"
 
 class MainMenuState : public State {
 private:
+	sf::RectangleShape background;
+	sf::Font font;
+
+	Button* gamestate_button;
+	Button* gamestate_exit;
+	Button* gamestate_credits;
+
+	// Functions
+	void initVariables();
+	void initFonts();
 
 protected:
-	sf::RenderWindow* window;
 	std::vector<sf::Texture> Textures;
 	bool quit;
 public:
-	MainMenuState(sf::RenderWindow* window);
+	MainMenuState(sf::RenderWindow* window, std::stack<State*>* states);
 	virtual ~MainMenuState();
 
 	const bool& getQuit() const;

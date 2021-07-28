@@ -5,9 +5,10 @@ State::State() {
 
 }
 
-State::State(sf::RenderWindow* window) {
+State::State(sf::RenderWindow* window, std::stack<State*>* states) {
 	this->window = window;
 	this->quit = false;
+	this->states = states;
 }
 
 State::~State() {
@@ -30,6 +31,12 @@ void State::endState() {
 
 void State::updateKeybinds(const float& dt) {
 
+}
+
+void State::updateMousePositions() {
+	this->mousePositionScreen = sf::Mouse::getPosition();
+	this->mousePositionWindow = sf::Mouse::getPosition(*this->window);
+	this->mousePositionView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));
 }
 
 void State::update(const float& dt) {

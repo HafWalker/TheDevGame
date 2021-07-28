@@ -17,7 +17,7 @@ private:
 	bool inPlayerAttacking;
 
 public:
-	GameState(sf::RenderWindow* window);
+	GameState(sf::RenderWindow* window, std::stack<State*>* states);
 	virtual ~GameState();
 
 	static std::vector<Collider2D*> colliders;
