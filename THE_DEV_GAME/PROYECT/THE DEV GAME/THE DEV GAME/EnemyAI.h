@@ -47,6 +47,7 @@ public:
 	void update() override {
 		if (this->isAlive) {
 			CheckMovement();
+
 			rigidbody2D->move(Vector2D(m_vectorDirection.x * m_direction * m_speed, m_vectorDirection.y * m_direction * m_speed));
 			rigidbody2D->Drag();
 		}

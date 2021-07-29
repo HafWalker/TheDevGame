@@ -29,8 +29,9 @@ void MainMenuState::initFonts() {
 	}
 }
 
-MainMenuState::MainMenuState(sf::RenderWindow* window, std::stack<State*>* states) : State(window, states) {
+MainMenuState::MainMenuState(sf::RenderWindow* window, sf::View* view, std::stack<State*>* states) : State(window, view, states) {
 	this->window = window;
+	this->view = view;
 	this->initVariables();
 	this->quit = false;
 }
@@ -68,7 +69,7 @@ void MainMenuState::update(const float& dt) {
 	this->gamestate_credits->update(this->mousePositionView);
 
 	if (this->gamestate_button->isPressed()) {
-		this->states->push(new GameState(this->window, this->states));
+		this->states->push(new GameState(this->window, this->view, this->states));
 		std::cout << "Pressed GAME" << std::endl;
 	}
 

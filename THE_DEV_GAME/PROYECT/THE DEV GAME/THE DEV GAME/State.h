@@ -11,6 +11,7 @@ private:
 protected:
 	std::stack<State*>* states;
 	sf::RenderWindow* window;
+	sf::View* view;
 
 	sf::Vector2i mousePositionScreen;
 	sf::Vector2i mousePositionWindow;
@@ -19,7 +20,7 @@ protected:
 	bool quit;
 public:
 	State();
-	State(sf::RenderWindow* window, std::stack<State*>* states);
+	State(sf::RenderWindow* window, sf::View* view, std::stack<State*>* states);
 	virtual ~State();
 
 	const bool& getQuit() const;

@@ -27,7 +27,7 @@ private:
 	int enemysDirection = 1;
 
 public:
-	GameState(sf::RenderWindow* window, std::stack<State*>* states);
+	GameState(sf::RenderWindow* window, sf::View* view, std::stack<State*>* states);
 	virtual ~GameState();
 
 	static std::vector<Collider2D*> colliders;
@@ -41,6 +41,8 @@ public:
 	void updatePlayerInput();
 	void updateCollision();
 	void updateEnemys(const float& dt);
+
+	void updateView(const float& dt);
 
 	void update(const float& dt);
 	void render(sf::RenderTarget* target = nullptr);

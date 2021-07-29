@@ -13,6 +13,8 @@ auto& newPlayerAttackArea(manager.addEntity());
 auto& newEnemy(manager.addEntity());
 auto& newEnemyAttackArea(manager.addEntity());
 
+auto& newPoint(manager.addEntity());
+
 void GameState::initVariables() {
 	std::cout << "Init Variables" << std::endl;
 	keyPressed_Space = false;
@@ -23,8 +25,8 @@ void GameState::initVariables() {
 
 	this->textScore = new UIText(55,55, 24, &this->font, "Score: 0");
 
-	Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16,12);
-	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level2_32x21.map", 32, 21);
+	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16,12);
+	Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level2_32x21.map", 32, 21);
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_TEST.map", 16, 12);
 
 	newPlayer.addComponent<Transform>(100, 350, 100, 55, 1);
@@ -67,6 +69,18 @@ void GameState::initVariables() {
 	newEnemy.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ DIE,0,31 });
 	newEnemy.getComponent<AnimatorComponent>().setAnimationState(IDLE);
 	//newEnemy.getComponent<AnimatorComponent>().SetIdleAnimation(2, 81);
+
+	// Point
+
+	newPoint.addComponent<Transform>(300, 250, 50, 55, 1);
+	newPoint.addComponent<SpriteComponent>("D:/THE_DEV_GAME/PROYECT/Sprites/Animation/spritesheet_point.png");
+	newPoint.addComponent<AnimatorComponent>(128, 128);
+	newPoint.addComponent<Collider2D>("Enemy", 0.f, 25.f);
+	newPoint.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ IDLE,0,81 });
+	newPoint.getComponent<AnimatorComponent>().setAnimationState(IDLE);
+	
+	// Init View Center
+	this->view->setCenter(sf::Vector2f(newPlayer.getComponent<Transform>().position.x, newPlayer.getComponent<Transform>().position.y));
 }
 
 void GameState::initFonts() {
@@ -75,8 +89,9 @@ void GameState::initFonts() {
 	}
 }
 
-GameState::GameState(sf::RenderWindow* window, std::stack<State*>* states) : State(window, states) {
+GameState::GameState(sf::RenderWindow* window, sf::View* view, std::stack<State*>* states) : State(window, view, states) {
 	this->window = window;
+	this->view = view;
 	initVariables();
 }
 
@@ -195,10 +210,13 @@ void GameState::update(const float& dt) {
 	this->updateKeybinds(dt);
 	this->updatePlayerInput();
 	this->updateCollision();
+	this->updateView(dt);
 
 	newPlayer.getComponent<AnimatorComponent>().updateDeltaTime(dt);
-	newPlayerAttackArea.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position;
 	newEnemy.getComponent<AnimatorComponent>().updateDeltaTime(dt);
+	newPoint.getComponent<AnimatorComponent>().updateDeltaTime(dt);
+
+	newPlayerAttackArea.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position;
 	updateEnemys(dt);
 
 	manager.update();
@@ -211,8 +229,18 @@ void GameState::updateEnemys(const float& dt) {
 	}
 }
 
+void GameState::updateView(const float& dt) {
+	sf::Vector2f playersPosition = sf::Vector2f(newPlayer.getComponent<Transform>().position.x, newPlayer.getComponent<Transform>().position.y);
+	sf::Vector2f movement = playersPosition - this->view->getCenter();
+	this->view->move(sf::Vector2f(movement * dt * 2.f));
+
+	// Set the Score text in the top left of the view
+	this->textScore->SetPosition(this->view->getCenter().x - (this->view->getSize().x/2), this->view->getCenter().y - (this->view->getSize().y / 2));
+}
+
 void GameState::render(sf::RenderTarget* target) {
 
+	this->window->setView(*view);
 	// Render
 	for (auto cc : Tiles) {
 		this->window->draw(cc->entity->getComponent<SpriteComponent>().GetSprite());
@@ -223,6 +251,7 @@ void GameState::render(sf::RenderTarget* target) {
 
 	this->window->draw(newEnemy.getComponent<SpriteComponent>().GetSprite());
 	this->window->draw(newPlayer.getComponent<SpriteComponent>().GetSprite());
+	this->window->draw(newPoint.getComponent<SpriteComponent>().GetSprite());
 
 	//TextureManager::Draw(newPlayer.getComponent<SpriteComponent>().GetSprite());
 
@@ -230,6 +259,7 @@ void GameState::render(sf::RenderTarget* target) {
 	//this->window->draw(newEnemy.getComponent<Collider2D>().collider);
 	//this->window->draw(newPlayerAttackArea.getComponent<Collider2D>().collider);
 	//this->window->draw(newPlayer.getComponent<Collider2D>().collider);
+	//this->window->draw(newPoint.getComponent<Collider2D>().collider);
 	//
 
 	// SPRITES DEBUG

@@ -5,8 +5,9 @@ State::State() {
 
 }
 
-State::State(sf::RenderWindow* window, std::stack<State*>* states) {
+State::State(sf::RenderWindow* window, sf::View* view, std::stack<State*>* states) {
 	this->window = window;
+	this->view = view;
 	this->quit = false;
 	this->states = states;
 }
@@ -21,6 +22,7 @@ const bool& State::getQuit() const {
 
 void State::checkForQuit() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		this->view->setCenter(sf::Vector2f(this->window->getSize().x/2,this->window->getSize().y/2));
 		this->quit = true;
 	}
 }

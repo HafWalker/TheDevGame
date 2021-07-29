@@ -18,6 +18,7 @@ private:
 
 	// Error de punteros por este
 	sf::RenderWindow* window;
+	sf::View* view;
 
 	sf::Clock dtClock;
 	float dt;
@@ -28,6 +29,7 @@ private:
 	bool inPlayerAttacking;
 
 	void initVariables();
+	void initView();
 	void initWindow();
 
 	//STATES

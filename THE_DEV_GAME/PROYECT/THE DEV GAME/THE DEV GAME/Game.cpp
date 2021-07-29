@@ -6,6 +6,10 @@ void Game::initVariables() {
 	std::cout << "Init GAME Variables" << std::endl;
 }
 
+void Game::initView() {
+	this->view = new sf::View(sf::Vector2f(0.f, 0.f), sf::Vector2f(800.f, 600.f));
+}
+
 void Game::initWindow() {
 	std::cout << "Init Window: GAME" << std::endl;
 	this->window = new sf::RenderWindow(sf::VideoMode(800, 600), "The Dev Game", sf::Style::Close | sf::Style::Titlebar);
@@ -13,17 +17,19 @@ void Game::initWindow() {
 }
 
 void Game::initStates() {
-	this->states.push(new MainMenuState(this->window, &this->states));
+	this->states.push(new MainMenuState(this->window, this->view, &this->states));
 }
 
 Game::Game() {
 	this->initVariables();
 	this->initWindow();
+	this->initView();
 	this->initStates();
 }
 
 Game::~Game() {
 	delete this->window;
+	delete this->view;
 	while (!this->states.empty()) {
 		delete this->states.top();
 		this->states.pop();
