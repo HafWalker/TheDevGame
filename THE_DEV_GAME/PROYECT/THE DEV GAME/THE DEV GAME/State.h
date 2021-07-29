@@ -11,7 +11,6 @@ private:
 protected:
 	std::stack<State*>* states;
 	sf::RenderWindow* window;
-	std::vector<sf::Texture> Textures;
 
 	sf::Vector2i mousePositionScreen;
 	sf::Vector2i mousePositionWindow;

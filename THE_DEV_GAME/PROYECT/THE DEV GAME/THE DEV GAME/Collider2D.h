@@ -9,8 +9,13 @@ public:
 
 	Transform* transform;
 
-	Collider2D(std::string t) {
+	float colliderOffsetX;
+	float colliderOffsetY;
+
+	Collider2D(std::string t, float offset_X, float offset_Y) {
 		tag = t;
+		this->colliderOffsetX = offset_X;
+		this->colliderOffsetY = offset_Y;
 	}
 
 	void init() override {
@@ -27,7 +32,7 @@ public:
 	}
 
 	void update() override {
-		collider.setPosition(transform->position.x, transform->position.y);
+		collider.setPosition(transform->position.x + colliderOffsetX, transform->position.y + colliderOffsetY);
 		/// En caso de modificar la escala de los elementos InGame es necesario multiplicar el Size * Transform.Scale
 		collider.setSize(sf::Vector2f(transform->width, transform->height));
 	}

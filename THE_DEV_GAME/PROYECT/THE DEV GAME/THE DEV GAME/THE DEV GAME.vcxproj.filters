@@ -87,6 +87,9 @@
     <ClInclude Include="Button.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="UIText.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -129,6 +132,9 @@
       <Filter>Archivos de encabezado\States</Filter>
     </ClCompile>
     <ClCompile Include="Button.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="UIText.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>

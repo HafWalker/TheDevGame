@@ -6,6 +6,13 @@
 
 enum ANIMATION_STATES { IDLE = 0, MOVING_LEFT, MOVING_RIGHT, JUMPING, FALLING, ATTACK, TAKE_DAMAGE, DIE };
 
+struct AnimationSetting {
+public:
+	ANIMATION_STATES animationState;
+	short framePositionY;
+	short framesLength;
+};
+
 class AnimatorComponent : public Component {
 private:
 	short animState;
@@ -13,6 +20,9 @@ private:
 	sf::Clock animationTimer;
 	bool animationSwitch;
 
+	float animationFrameTime;
+
+	std::vector<AnimationSetting> animationSettings;
 	int spriteRectX;
 	int spriteRectY;
 
@@ -30,6 +40,7 @@ public:
 	}
 
 	void init() override {
+		animationFrameTime = 0.f;
 		if (!entity->hasComponents<SpriteComponent>()) {
 			entity->addComponent<SpriteComponent>();
 		}
@@ -37,7 +48,6 @@ public:
 		this->animationActive = false;
 		this->animationTimer.restart();
 		this->animationSwitch = true;
-		setAnimationState(ANIMATION_STATES::IDLE);
 
 		//if (spriteRectX <= 0) {
 		//	spriteRectX = 50;
@@ -47,15 +57,19 @@ public:
 		//	spriteRectY = 50;
 		//}
 
-		setAnimationState(ANIMATION_STATES::IDLE);
 
 		//TODO: Define the sheet tile
 		this->currentFrame = sf::IntRect(0, 0, spriteRectX, spriteRectY);
 	}
 
+	void updateDeltaTime(const float& dt) {
+		this->animationFrameTime += dt;
+	}
+	
 	void update() override {
 		if (spriteComponent != nullptr) {
-			if (this->animationTimer.getElapsedTime().asSeconds() >= .015f || getAnimationSwitch()) {
+			if (this->animationFrameTime > 0.025f) { //  || getAnimationSwitch()) {
+				this->animationFrameTime = 0.f;
 				this->animationActive = true;
 				this->currentFrame.top = animationIndex * spriteRectY;
 				this->currentFrame.left += spriteRectX;
@@ -82,6 +96,11 @@ public:
 		}
 	}
 
+	void SetAnimationSettings(AnimationSetting animationSetting) {
+		//std::cout << "Pushed animationSettings" << std::endl;
+		this->animationSettings.push_back(animationSetting);
+	}
+
 	const bool& getAnimationEnd(ANIMATION_STATES animationToCheck) {
 		bool result = false;
 		if (this->animState == animationToCheck) {
@@ -104,55 +123,50 @@ public:
 
 	void setAnimationState(ANIMATION_STATES state) {
 		this->animState = state;
-		switch (state)
+		int animationSettingIndex = 0;
+
+		for (size_t i = 0; i < animationSettings.size(); i++)
 		{
-		case IDLE:
-			//std::cout << "PLAYER IDLE ANIMATION" << std::endl;
-			this->maxFrameOfAnimation = 48 * this->spriteRectX;
-			this->animationIndex = 2;
-			break;
-		case MOVING_LEFT:
-			//std::cout << "PLAYER MOVE <- ANIMATION" << this->spriteComponent->GetSprite().getScale().x << std::endl;
-			this->animationIndex = 3;
-			this->spriteComponent->SetScale(-1.f, 1.f);
-			this->spriteComponent->SetOrigin(this->spriteComponent->GetSprite().getGlobalBounds().width, 0.f);
-			this->maxFrameOfAnimation = 15 * this->spriteRectX;
-			break;
-		case MOVING_RIGHT:
-			//std::cout << "PLAYER MOVE -> ANIMATION" << this->spriteComponent->GetSprite().getScale().x << std::endl;
-			this->animationIndex = 3;
-			this->spriteComponent->SetScale(1.f, 1.f);
-			this->spriteComponent->SetOrigin(0.f, 0.f);
-			this->maxFrameOfAnimation = 15 * this->spriteRectX;
-			break;
-		case JUMPING:
-			//std::cout << "PLAYER JUMPING ANIMATION" << std::endl;
-			this->animationIndex = 5;
-			this->maxFrameOfAnimation = 15 * this->spriteRectX;
-			break;
-		case FALLING:
-			//std::cout << "PLAYER FALLING ANIMATION" << std::endl;
-			this->currentFrame.left = 0;
-			this->animationIndex = 1;
-			this->maxFrameOfAnimation = 22 * this->spriteRectX;
-			break;
-		case ATTACK:
-			//std::cout << "PLAYER ATTACK ANIMATION" << std::endl;
-			this->animationIndex = 4;
-			this->maxFrameOfAnimation = 31 * this->spriteRectX;
-			break;
-		case TAKE_DAMAGE:
-			//std::cout << "PLAYER TAKE_DAMAGE ANIMATION" << std::endl;
-			this->animationIndex = 6;
-			this->maxFrameOfAnimation = 32 * this->spriteRectX;
-			break;
-		case DIE:
-			//std::cout << "PLAYER DYING ANIMATION" << std::endl;
-			this->animationIndex = 0;
-			this->maxFrameOfAnimation = 73 * this->spriteRectX;
-			break;
-		default:
-			break;
+			if (this->animationSettings[i].animationState == state) {
+				animationSettingIndex = i;
+				this->maxFrameOfAnimation = animationSettings[animationSettingIndex].framesLength * this->spriteRectX;
+				this->animationIndex = animationSettings[animationSettingIndex].framePositionY;
+				switch (animationSettings[animationSettingIndex].animationState) {
+				case IDLE:
+					//std::cout << "PLAYER IDLE ANIMATION" << std::endl;
+					break;
+				case MOVING_LEFT:
+					//std::cout << "PLAYER MOVE <- ANIMATION" << this->spriteComponent->GetSprite().getScale().x << std::endl;
+					this->spriteComponent->SetScale(-1.f, 1.f);
+					this->spriteComponent->SetOrigin(this->spriteComponent->GetSprite().getGlobalBounds().width, 0.f);
+					break;
+				case MOVING_RIGHT:
+					//std::cout << "PLAYER MOVE -> ANIMATION" << this->spriteComponent->GetSprite().getScale().x << std::endl;
+					this->spriteComponent->SetScale(1.f, 1.f);
+					this->spriteComponent->SetOrigin(0.f, 0.f);
+					break;
+				case JUMPING:
+					//std::cout << "PLAYER JUMPING ANIMATION" << std::endl;
+					break;
+				case FALLING:
+					//std::cout << "PLAYER FALLING ANIMATION" << std::endl;
+					this->currentFrame.left = 0;
+					break;
+				case ATTACK:
+					//std::cout << "PLAYER ATTACK ANIMATION" << std::endl;
+					break;
+				case TAKE_DAMAGE:
+					//std::cout << "PLAYER TAKE_DAMAGE ANIMATION" << std::endl;
+					break;
+				case DIE:
+					//std::cout << "PLAYER DYING ANIMATION" << std::endl;
+					this->animationIndex = 0;
+					this->maxFrameOfAnimation = 73 * this->spriteRectX;
+					break;
+				default:
+					break;
+				}
+			}
 		}
 	}
 };

@@ -44,7 +44,7 @@ public:
 		entity->addComponent<SpriteComponent>(path);
 		sprite = &entity->getComponent<SpriteComponent>();
 		if (tileID == 0) {
-			entity->addComponent<Collider2D>("Wall");
+			entity->addComponent<Collider2D>("Wall", 0.f, 0.f);
 		}
 		GameState::Tiles.push_back(this);
 	}

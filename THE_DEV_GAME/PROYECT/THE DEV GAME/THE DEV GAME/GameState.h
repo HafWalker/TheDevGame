@@ -1,5 +1,6 @@
 #pragma once
 #include "State.h"
+#include "UIText.h"
 
 class TileComponent;
 class Collider2D;
@@ -9,12 +10,21 @@ class GameState : public State
 private:
 	sf::Event ev;
 
+	// UI
+	sf::Font font;
+	UIText* textScore;
+
+	// Functions
 	void initVariables();
+	void initFonts();
 
 	// Keyboard booleans
 	bool keyPressed_Space;
 	bool isPlayerJumping;
 	bool inPlayerAttacking;
+
+	//Hacks
+	int enemysDirection = 1;
 
 public:
 	GameState(sf::RenderWindow* window, std::stack<State*>* states);
@@ -30,6 +40,7 @@ public:
 
 	void updatePlayerInput();
 	void updateCollision();
+	void updateEnemys();
 
 	void update(const float& dt);
 	void render(sf::RenderTarget* target = nullptr);
