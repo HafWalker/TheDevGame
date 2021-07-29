@@ -40,7 +40,7 @@ public:
 
 	void updatePlayerInput();
 	void updateCollision();
-	void updateEnemys();
+	void updateEnemys(const float& dt);
 
 	void update(const float& dt);
 	void render(sf::RenderTarget* target = nullptr);

@@ -8,7 +8,10 @@ std::vector<Collider2D*> GameState::colliders;
 std::vector<TileComponent*> GameState::Tiles;
 
 auto& newPlayer(manager.addEntity());
+auto& newPlayerAttackArea(manager.addEntity());
+
 auto& newEnemy(manager.addEntity());
+auto& newEnemyAttackArea(manager.addEntity());
 
 void GameState::initVariables() {
 	std::cout << "Init Variables" << std::endl;
@@ -32,15 +35,18 @@ void GameState::initVariables() {
 
 	//Animation settings for Player
 
-	newPlayer.getComponent<AnimatorComponent>().SetAnimationSettings(AnimationSetting{ IDLE,2,48});
-	newPlayer.getComponent<AnimatorComponent>().SetAnimationSettings(AnimationSetting{ MOVING_LEFT,3,15 });
-	newPlayer.getComponent<AnimatorComponent>().SetAnimationSettings(AnimationSetting{ MOVING_RIGHT,3,15 });
-	newPlayer.getComponent<AnimatorComponent>().SetAnimationSettings(AnimationSetting{ TAKE_DAMAGE,6,32 });
-	newPlayer.getComponent<AnimatorComponent>().SetAnimationSettings(AnimationSetting{ ATTACK,4,31 });
-	newPlayer.getComponent<AnimatorComponent>().SetAnimationSettings(AnimationSetting{ JUMPING,5,15 });
-	newPlayer.getComponent<AnimatorComponent>().SetAnimationSettings(AnimationSetting{ FALLING,1,48 });
-	newPlayer.getComponent<AnimatorComponent>().SetAnimationSettings(AnimationSetting{ DIE,0,73 });
+	newPlayer.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ IDLE,2,48});
+	newPlayer.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ MOVING_LEFT,3,15 });
+	newPlayer.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ MOVING_RIGHT,3,15 });
+	newPlayer.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ TAKE_DAMAGE,6,32 });
+	newPlayer.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ ATTACK,4,31 });
+	newPlayer.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ JUMPING,5,22 });
+	newPlayer.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ FALLING,1,22 });
+	newPlayer.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ DIE,0,73 });
 	newPlayer.getComponent<AnimatorComponent>().setAnimationState(IDLE);
+
+	newPlayerAttackArea.addComponent<Transform>(100, 350, 100, 55, 1);
+	newPlayerAttackArea.addComponent<Collider2D>("PlayerHitArea", 50.f, 25.f, 50.f, 50.f);
 
 	//newPlayer.getComponent<AnimatorComponent>().SetIdleAnimation(2, 48);
 
@@ -49,13 +55,16 @@ void GameState::initVariables() {
 	newEnemy.addComponent<AnimatorComponent>(128, 128);
 	newEnemy.addComponent<Collider2D>("Enemy", 0.f, 25.f);
 	newEnemy.addComponent<Rigidbody2D>();
+	newEnemy.addComponent<EnemyAI>(Vector2D(1.f, 0.f), 0.05f, 100.f, 500.f);
+
 	newEnemy.getComponent<Rigidbody2D>().gravity = 0.f;
+	newEnemy.getComponent<EnemyAI>().SetAttackTimer(7.f);
 
 	//Animation settings for enemy
 
-	newEnemy.getComponent<AnimatorComponent>().SetAnimationSettings(AnimationSetting{ IDLE,2,81 });
-	newEnemy.getComponent<AnimatorComponent>().SetAnimationSettings(AnimationSetting{ ATTACK,1,81 });
-	newEnemy.getComponent<AnimatorComponent>().SetAnimationSettings(AnimationSetting{ DIE,0,31 });
+	newEnemy.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ IDLE,2,81 });
+	newEnemy.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ ATTACK,1,81 });
+	newEnemy.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ DIE,0,31 });
 	newEnemy.getComponent<AnimatorComponent>().setAnimationState(IDLE);
 	//newEnemy.getComponent<AnimatorComponent>().SetIdleAnimation(2, 81);
 }
@@ -117,7 +126,7 @@ void GameState::updatePlayerInput() {
 		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -2.f));
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) && !inPlayerAttacking) {
 		inPlayerAttacking = true;
 		newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::ATTACK);
 		//newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -2.f));
@@ -157,7 +166,9 @@ void GameState::updateCollision() {
 		CollisionInfo collisionInfo;
 		collisionInfo = Collision::AABB(newPlayer.getComponent<Collider2D>(), *cc);
 		if (collisionInfo.isColliding) {
-			if (collisionInfo.tag != "Player") {
+			if (collisionInfo.tag != "Player" &&
+				collisionInfo.tag != "PlayerHitArea" &&
+				collisionInfo.tag != "Enemy") {
 				//std::cout << "Disp" << collisionInfo.displacement * 0.2f << std::endl;
 				//newPlayer.getComponent<Transform>().DetectCollision(collisionInfo.displacement);
 				newPlayer.getComponent<Rigidbody2D>().move(collisionInfo.displacement * 0.02f);
@@ -169,13 +180,14 @@ void GameState::updateCollision() {
 			}
 		}
 
-		////Enemy
-		//collisionInfo = Collision::AABB(newEnemy.getComponent<Collider2D>(), *cc);
-		//if (collisionInfo.isColliding) {
-		//	if (collisionInfo.tag == "Wall") {
-		//		this->enemysDirection = !this->enemysDirection;
-		//	}
-		//}
+		//Enemy
+		collisionInfo = Collision::AABB(newEnemy.getComponent<Collider2D>(), *cc);
+		if (collisionInfo.isColliding) {
+			if (collisionInfo.tag == "PlayerHitArea" && inPlayerAttacking && newEnemy.getComponent<EnemyAI>().isAlive) {
+				newEnemy.getComponent<AnimatorComponent>().setAnimationState(DIE);
+				newEnemy.getComponent<EnemyAI>().TakeDamage();
+			}
+		}
 	}
 }
 
@@ -183,22 +195,20 @@ void GameState::update(const float& dt) {
 	this->updateKeybinds(dt);
 	this->updatePlayerInput();
 	this->updateCollision();
-	this->updateEnemys();
 
 	newPlayer.getComponent<AnimatorComponent>().updateDeltaTime(dt);
+	newPlayerAttackArea.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position;
 	newEnemy.getComponent<AnimatorComponent>().updateDeltaTime(dt);
+	updateEnemys(dt);
+
 	manager.update();
 }
 
-void GameState::updateEnemys() {
-	//std::cout << newEnemy.getComponent<Transform>().position.x << std::endl;
-	if (newEnemy.getComponent<Transform>().position.x > 500) {
-		enemysDirection = -1;
-	} else if (newEnemy.getComponent<Transform>().position.x < 100) {
-		enemysDirection = 1;
+void GameState::updateEnemys(const float& dt) {
+	newEnemy.getComponent<EnemyAI>().UpdateDeltaTime(dt);
+	if (newEnemy.getComponent<EnemyAI>().GetAttackTrigger()) {
+		newEnemy.getComponent<AnimatorComponent>().setAnimationState(ATTACK);
 	}
-
-	newEnemy.getComponent<Rigidbody2D>().move(Vector2D(0.01f * enemysDirection, 0.f));
 }
 
 void GameState::render(sf::RenderTarget* target) {
@@ -217,11 +227,13 @@ void GameState::render(sf::RenderTarget* target) {
 	//TextureManager::Draw(newPlayer.getComponent<SpriteComponent>().GetSprite());
 
 	// COLLISION DEBUG
-		this->window->draw(newEnemy.getComponent<Collider2D>().collider);
+	//this->window->draw(newEnemy.getComponent<Collider2D>().collider);
+	//this->window->draw(newPlayerAttackArea.getComponent<Collider2D>().collider);
+	//this->window->draw(newPlayer.getComponent<Collider2D>().collider);
 	//
 
 	// SPRITES DEBUG
-		this->window->draw(newEnemy.getComponent<SpriteComponent>().GetDebugSpriteIntRect());
+	//this->window->draw(newEnemy.getComponent<SpriteComponent>().GetDebugSpriteIntRect());
 	//
 
 	// UI - RENDER

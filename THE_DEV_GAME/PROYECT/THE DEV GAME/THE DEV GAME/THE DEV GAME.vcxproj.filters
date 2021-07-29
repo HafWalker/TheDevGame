@@ -90,6 +90,9 @@
     <ClInclude Include="UIText.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyAI.h">
+      <Filter>Archivos de encabezado\ECS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
