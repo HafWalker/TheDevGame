@@ -20,7 +20,7 @@ void Game::initWindow() {
 }
 
 void Game::initStates() {
-	this->states.push(new MainMenuState(this->window, this->view, &this->states));
+	this->states.push(new MainMenuState(this->window, this->view, this->highscoreManager, &this->states));
 }
 
 Game::Game() {

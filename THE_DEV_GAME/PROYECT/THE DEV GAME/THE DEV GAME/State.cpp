@@ -5,10 +5,11 @@ State::State() {
 
 }
 
-State::State(sf::RenderWindow* window, sf::View* view, std::stack<State*>* states) {
+State::State(sf::RenderWindow* window, sf::View* view, HighScore* highscore, std::stack<State*>* states) {
 	this->window = window;
 	this->view = view;
 	this->quit = false;
+	this->highscore = highscore;
 	this->states = states;
 }
 

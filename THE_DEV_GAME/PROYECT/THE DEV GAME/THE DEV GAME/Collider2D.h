@@ -8,9 +8,12 @@ private:
 	float m_colliderOffsetY;
 	float m_width;
 	float m_height;
+
 public:
 	sf::RectangleShape collider;
 	std::string tag;
+
+	bool isActive = true;
 
 	Transform* transform;
 
@@ -44,5 +47,9 @@ public:
 
 	void update() override {
 		collider.setPosition(transform->position.x + m_colliderOffsetX, transform->position.y + m_colliderOffsetY);
+	}
+
+	void SetColliderActive(bool value) {
+		isActive = value;
 	}
 };

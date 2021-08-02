@@ -10,6 +10,7 @@ public:
 	~UIText();
 	void update(std::string value);
 	void render(sf::RenderTarget* target);
+	void SetText(std::string value);
 	void SetPosition(float x, float y) {
 		this->text.setPosition(x, y);
 	}

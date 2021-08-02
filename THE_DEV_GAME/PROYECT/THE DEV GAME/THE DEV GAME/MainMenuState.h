@@ -19,7 +19,7 @@ protected:
 	std::vector<sf::Texture> Textures;
 	bool quit;
 public:
-	MainMenuState(sf::RenderWindow* window, sf::View* view, std::stack<State*>* states);
+	MainMenuState(sf::RenderWindow* window, sf::View* view, HighScore* highscore, std::stack<State*>* states);
 	virtual ~MainMenuState();
 
 	const bool& getQuit() const;

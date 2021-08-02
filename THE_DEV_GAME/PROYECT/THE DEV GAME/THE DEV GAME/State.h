@@ -3,6 +3,7 @@
 #include <vector>
 #include <stack>
 #include <map>
+#include "HighScore.h"
 
 class State
 {
@@ -12,6 +13,7 @@ protected:
 	std::stack<State*>* states;
 	sf::RenderWindow* window;
 	sf::View* view;
+	HighScore* highscore;
 
 	sf::Vector2i mousePositionScreen;
 	sf::Vector2i mousePositionWindow;
@@ -20,7 +22,7 @@ protected:
 	bool quit;
 public:
 	State();
-	State(sf::RenderWindow* window, sf::View* view, std::stack<State*>* states);
+	State(sf::RenderWindow* window, sf::View* view, HighScore* highscore, std::stack<State*>* states);
 	virtual ~State();
 
 	const bool& getQuit() const;

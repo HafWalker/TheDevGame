@@ -19,3 +19,7 @@ void UIText::update(std::string value) {
 void UIText::render(sf::RenderTarget* target) {
 	target->draw(this->text);
 }
+
+void UIText::SetText(std::string value) {
+	this->text.setString(value);
+}

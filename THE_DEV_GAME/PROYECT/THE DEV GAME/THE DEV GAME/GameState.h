@@ -5,14 +5,15 @@
 class TileComponent;
 class Collider2D;
 
-class GameState : public State
-{
+class GameState : public State {
 private:
 	sf::Event ev;
 
 	// UI
 	sf::Font font;
 	UIText* textScore;
+
+	int scoreValue = 0;
 
 	// Functions
 	void initVariables();
@@ -27,7 +28,7 @@ private:
 	int enemysDirection = 1;
 
 public:
-	GameState(sf::RenderWindow* window, sf::View* view, std::stack<State*>* states);
+	GameState(sf::RenderWindow* window, sf::View* view, HighScore* highscore, std::stack<State*>* states);
 	virtual ~GameState();
 
 	static std::vector<Collider2D*> colliders;

@@ -90,9 +90,10 @@ void GameState::initFonts() {
 	}
 }
 
-GameState::GameState(sf::RenderWindow* window, sf::View* view, std::stack<State*>* states) : State(window, view, states) {
+GameState::GameState(sf::RenderWindow* window, sf::View* view, HighScore* highscore, std::stack<State*>* states) : State(window, view, highscore, states) {
 	this->window = window;
 	this->view = view;
+	this->highscore = highscore;
 	initVariables();
 }
 
@@ -207,6 +208,12 @@ void GameState::updateCollision() {
 				isPlayerJumping = false;
 				newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::IDLE);
 			}
+
+			if (collisionInfo.tag == "Point" && cc->isActive) {
+				cc->SetColliderActive(false);
+				this->highscore->AddScore("NewPlayer", 100);
+				std::cout << "AddPoint to score" << std::endl;
+			}
 		}
 
 		//Enemy
@@ -221,6 +228,7 @@ void GameState::updateCollision() {
 }
 
 void GameState::update(const float& dt) {
+	manager.update();
 	this->updateKeybinds(dt);
 	this->updatePlayerInput();
 	this->updateCollision();
@@ -238,7 +246,6 @@ void GameState::update(const float& dt) {
 	newPlayerAttackArea.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position;
 	updateEnemys(dt);
 
-	manager.update();
 }
 
 void GameState::updateEnemys(const float& dt) {
@@ -254,6 +261,8 @@ void GameState::updateView(const float& dt) {
 	this->view->move(sf::Vector2f(movement * dt * 2.f));
 
 	// Set the Score text in the top left of the view
+	this->scoreValue = this->highscore->GetScore("NewPlayer").first;
+	this->textScore->SetText("Score: " + std::to_string(this->scoreValue));
 	this->textScore->SetPosition(this->view->getCenter().x - (this->view->getSize().x/2), this->view->getCenter().y - (this->view->getSize().y / 2));
 }
 
@@ -277,8 +286,8 @@ void GameState::render(sf::RenderTarget* target) {
 	// COLLISION DEBUG
 	//this->window->draw(newEnemy.getComponent<Collider2D>().collider);
 	//this->window->draw(newPlayerAttackArea.getComponent<Collider2D>().collider);
-	//this->window->draw(newPlayer.getComponent<Collider2D>().collider);
-	//this->window->draw(newPoint.getComponent<Collider2D>().collider);
+	this->window->draw(newPlayer.getComponent<Collider2D>().collider);
+	this->window->draw(newPoint.getComponent<Collider2D>().collider);
 	//
 
 	// SPRITES DEBUG

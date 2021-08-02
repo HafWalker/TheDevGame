@@ -17,3 +17,5 @@
 #include "Vector2D.h"
 #include "Collision.h"
 #include "TextureManager.h"
+
+#include "HighScore.h"
