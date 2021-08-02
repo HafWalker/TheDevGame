@@ -4,15 +4,18 @@
 
 void Game::initVariables() {
 	std::cout << "Init GAME Variables" << std::endl;
+	// Scores init
+	this->highscoreManager = new HighScore();
+	this->highscoreManager->AddScore("NewPlayer", 0);
 }
 
 void Game::initView() {
-	this->view = new sf::View(sf::Vector2f(0.f, 0.f), sf::Vector2f(800.f, 600.f));
+	this->view = new sf::View(sf::Vector2f(0.f, 0.f), sf::Vector2f(1024.f, 920.f));
 }
 
 void Game::initWindow() {
 	std::cout << "Init Window: GAME" << std::endl;
-	this->window = new sf::RenderWindow(sf::VideoMode(800, 600), "The Dev Game", sf::Style::Close | sf::Style::Titlebar);
+	this->window = new sf::RenderWindow(sf::VideoMode(1024, 920), "The Dev Game", sf::Style::Close | sf::Style::Titlebar);
 	this->window->setFramerateLimit(60);
 }
 
@@ -30,6 +33,7 @@ Game::Game() {
 Game::~Game() {
 	delete this->window;
 	delete this->view;
+	delete this->highscoreManager;
 	while (!this->states.empty()) {
 		delete this->states.top();
 		this->states.pop();

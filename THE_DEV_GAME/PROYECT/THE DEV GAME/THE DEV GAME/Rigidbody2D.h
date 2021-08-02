@@ -4,8 +4,11 @@
 #include "Game.h"
 
 class Rigidbody2D : public Component {
+private:
+	Vector2D vectorJump;
+
 public:
-	float gravity = 0.3f;
+	float gravity = 15.f;
 	Transform* transform;
 
 	float gravityMaxSpeed;
@@ -23,17 +26,33 @@ public:
 		}
 		transform = &entity->getComponent<Transform>();
 
-		gravityMaxSpeed = 2.5f;
-		velocityMax = 15.f;
+		gravityMaxSpeed = 40.f;
+		velocityMax = 40.f;
 		aceleration = 3.f;
 		velocityMin = 0.01f;
 		dragCoefficient = 0.8f;
 	}
 
 	void update() override {
-		transform->velocity.Add(Vector2D(0.f, gravity));
+	
+	}
+
+	void update(const float& dt) {
+		transform->velocity.Add(Vector2D(0.f, gravity * dt));
 		if (transform->velocity.y > gravityMaxSpeed) { transform->velocity.y = gravityMaxSpeed; }
+		
+		transform->velocity.y = transform->velocity.y + (vectorJump.y * dt);
+		vectorJump = vectorJump + Vector2D(0.f, dt * gravity * 4.f);
+
+		if (vectorJump.y > 0.f) { vectorJump.y = 0.f; }
+
+		//std::cout << transform->velocity.y << std::endl;
+
 		Drag();
+	}
+
+	void Jump(Vector2D vectorDirection) {
+		vectorJump = vectorDirection;
 	}
 
 	void move(Vector2D vectorDirection) {

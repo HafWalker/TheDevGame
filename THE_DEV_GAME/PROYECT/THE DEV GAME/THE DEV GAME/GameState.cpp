@@ -26,7 +26,8 @@ void GameState::initVariables() {
 	this->textScore = new UIText(55,55, 24, &this->font, "Score: 0");
 
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16,12);
-	Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level2_32x21.map", 32, 21);
+	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level2_32x21.map", 32, 21);
+	Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level3_32x21_VARIANTE.map", 32, 21);
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_TEST.map", 16, 12);
 
 	newPlayer.addComponent<Transform>(100, 350, 100, 55, 1);
@@ -52,7 +53,7 @@ void GameState::initVariables() {
 
 	//newPlayer.getComponent<AnimatorComponent>().SetIdleAnimation(2, 48);
 
-	newEnemy.addComponent<Transform>(300,450, 50, 55, 1);
+	newEnemy.addComponent<Transform>(300,400, 50, 55, 1);
 	newEnemy.addComponent<SpriteComponent>("D:/THE_DEV_GAME/PROYECT/Sprites/Animation/spritesheet_enemy_full.png");
 	newEnemy.addComponent<AnimatorComponent>(128, 128);
 	newEnemy.addComponent<Collider2D>("Enemy", 0.f, 25.f);
@@ -75,7 +76,7 @@ void GameState::initVariables() {
 	newPoint.addComponent<Transform>(300, 250, 50, 55, 1);
 	newPoint.addComponent<SpriteComponent>("D:/THE_DEV_GAME/PROYECT/Sprites/Animation/spritesheet_point.png");
 	newPoint.addComponent<AnimatorComponent>(128, 128);
-	newPoint.addComponent<Collider2D>("Enemy", 0.f, 25.f);
+	newPoint.addComponent<Collider2D>("Point", 0.f, 25.f);
 	newPoint.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ IDLE,0,81 });
 	newPoint.getComponent<AnimatorComponent>().setAnimationState(IDLE);
 	
@@ -115,30 +116,32 @@ void GameState::updateKeybinds(const float& st) {
 void GameState::updatePlayerInput() {
 	this->window->pollEvent(ev);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) && !inPlayerAttacking) {
-		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(-0.1f, 0.f));
+		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(-0.075f, 0.f));
 		if (!isPlayerJumping) {
 			newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::MOVING_LEFT);
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) && !inPlayerAttacking) {
-		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.1f, 0.f));
+		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.075f, 0.f));
 		if (!isPlayerJumping) {
 			newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::MOVING_RIGHT);
 		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -0.1f));
+		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -0.075f));
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, 0.1f));
+		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, 0.075f));
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !keyPressed_Space) {
 		keyPressed_Space = true;
 		isPlayerJumping = true;
 		newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::FALLING);
-		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -2.f));
+		//std::cout << "JUMP" << std::endl;
+		newPlayer.getComponent<Rigidbody2D>().Jump(Vector2D(0.f, -40.f));
+		//newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -2.f));
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) && !inPlayerAttacking) {
@@ -150,6 +153,7 @@ void GameState::updatePlayerInput() {
 	if (ev.type == sf::Event::KeyReleased) {
 		if (ev.key.code == sf::Keyboard::Space && keyPressed_Space) {
 			keyPressed_Space = false;
+			//std::cout << "JUMP RELEASE" << std::endl;
 		}
 
 		if (ev.key.code == sf::Keyboard::J) {
@@ -178,6 +182,7 @@ void GameState::updatePlayerInput() {
 void GameState::updateCollision() {
 	for (auto cc : colliders) {
 		// Player
+
 		CollisionInfo collisionInfo;
 		collisionInfo = Collision::AABB(newPlayer.getComponent<Collider2D>(), *cc);
 		if (collisionInfo.isColliding) {
@@ -186,10 +191,19 @@ void GameState::updateCollision() {
 				collisionInfo.tag != "Enemy") {
 				//std::cout << "Disp" << collisionInfo.displacement * 0.2f << std::endl;
 				//newPlayer.getComponent<Transform>().DetectCollision(collisionInfo.displacement);
-				newPlayer.getComponent<Rigidbody2D>().move(collisionInfo.displacement * 0.02f);
 			}
 
-			if (collisionInfo.tag == "Wall" && isPlayerJumping && newPlayer.getComponent<AnimatorComponent>().getAnimationEnd(ANIMATION_STATES::FALLING)) {
+			if (collisionInfo.tag == "Collider") {
+				newPlayer.getComponent<Rigidbody2D>().move(collisionInfo.displacement * 0.02f);
+				newPlayer.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position + collisionInfo.displacement;
+				if (collisionInfo.displacement.y > 0) {
+					newPlayer.getComponent<Rigidbody2D>().Jump(Vector2D(0.f, 0.f));
+					//std::cout << "Colliding with Sealing" << std::endl;
+				}
+			
+			}
+
+			if (collisionInfo.tag == "Collider" && isPlayerJumping && newPlayer.getComponent<AnimatorComponent>().getAnimationEnd(ANIMATION_STATES::FALLING)) {
 				isPlayerJumping = false;
 				newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::IDLE);
 			}
@@ -212,7 +226,12 @@ void GameState::update(const float& dt) {
 	this->updateCollision();
 	this->updateView(dt);
 
+	if (newPlayer.getComponent<Transform>().velocity.y > 0.f) {
+		keyPressed_Space = false;
+	}
+
 	newPlayer.getComponent<AnimatorComponent>().updateDeltaTime(dt);
+	newPlayer.getComponent<Rigidbody2D>().update(dt);
 	newEnemy.getComponent<AnimatorComponent>().updateDeltaTime(dt);
 	newPoint.getComponent<AnimatorComponent>().updateDeltaTime(dt);
 

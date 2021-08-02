@@ -8,6 +8,7 @@
 
 #include "GameState.h"
 #include "MainMenuState.h"
+#include "HighScore.h"
 
 //class Collider2D;
 //class TileComponent;
@@ -15,6 +16,9 @@
 class Game {
 private:
 	sf::Event ev;
+
+	// Scores init
+	HighScore* highscoreManager;
 
 	// Error de punteros por este
 	sf::RenderWindow* window;
