@@ -61,8 +61,6 @@ const bool& MainMenuState::getQuit() const {
 
 void MainMenuState::checkForQuit() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-		// HARDCODE QUIT AFTER GAME
-		endState();
 		this->quit = true;
 	}
 }
@@ -77,6 +75,7 @@ void MainMenuState::updateKeybinds(const float& dt) {
 }
 
 void MainMenuState::update(const float& dt) {
+	this->view->setCenter(this->window->getSize().x/2, this->window->getSize().y / 2);
 	this->updateKeybinds(dt);
 	this->updateMousePositions();
 	this->playerInputField->update(this->window, ev);
@@ -104,6 +103,7 @@ void MainMenuState::update(const float& dt) {
 }
 
 void MainMenuState::render(sf::RenderTarget* target) {
+	this->window->setView(*view);
 	this->titleText->render(target);
 	this->gamestate_button->render(target);
 	this->gamestate_exit->render(target);
