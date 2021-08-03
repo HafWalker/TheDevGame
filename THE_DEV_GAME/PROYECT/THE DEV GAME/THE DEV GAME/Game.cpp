@@ -6,7 +6,6 @@ void Game::initVariables() {
 	std::cout << "Init GAME Variables" << std::endl;
 	// Scores init
 	this->highscoreManager = new HighScore();
-	this->highscoreManager->AddScore("NewPlayer", 0);
 }
 
 void Game::initView() {

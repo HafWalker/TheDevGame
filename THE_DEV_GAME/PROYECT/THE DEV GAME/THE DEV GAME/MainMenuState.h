@@ -1,11 +1,19 @@
 #pragma once
 #include "State.h"
 #include "Button.h"
+#include "InputField.h"
 
 class MainMenuState : public State {
 private:
 	sf::RectangleShape background;
 	sf::Font font;
+
+	sf::Event ev;
+
+	UIText* titleText;
+	UIText* nameInputText;
+	InputField* playerInputField;
+	bool isKeyPressed;
 
 	Button* gamestate_button;
 	Button* gamestate_exit;

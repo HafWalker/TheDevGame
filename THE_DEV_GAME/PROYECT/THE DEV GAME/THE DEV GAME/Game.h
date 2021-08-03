@@ -17,20 +17,14 @@ class Game {
 private:
 	sf::Event ev;
 
-	// Scores init
+	// Scores
 	HighScore* highscoreManager;
 
-	// Error de punteros por este
 	sf::RenderWindow* window;
 	sf::View* view;
 
 	sf::Clock dtClock;
 	float dt;
-
-	// Keyboard booleans
-	bool keyPressed_Space;
-	bool isPlayerJumping;
-	bool inPlayerAttacking;
 
 	void initVariables();
 	void initView();
@@ -57,7 +51,4 @@ public:
 	void update();
 	void render();
 	void run();
-
-	//GAME METHODS
 };
-

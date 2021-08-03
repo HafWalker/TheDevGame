@@ -5,14 +5,17 @@ class UIText {
 private:
 	sf::Font* font;
 	sf::Text text;
+	sf::FloatRect backgroundRect;
+	sf::RectangleShape background;
+	int characterSize;
+	bool useBackground = false;
 public:
 	UIText(float x, float y, int characterSize, sf::Font* textFont, std::string label);
 	~UIText();
 	void update(std::string value);
 	void render(sf::RenderTarget* target);
 	void SetText(std::string value);
-	void SetPosition(float x, float y) {
-		this->text.setPosition(x, y);
-	}
+	void SetPosition(float x, float y);
+	void SetTextBackground(float borderX, float borderY, sf::Color baseColor, sf::Color outlineColor, float outlineWidth);
 };
 

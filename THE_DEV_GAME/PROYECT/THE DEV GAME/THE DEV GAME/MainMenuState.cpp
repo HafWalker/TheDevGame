@@ -4,19 +4,28 @@
 void MainMenuState::initVariables() {
 	float screenCenter = this->window->getSize().x * .5f - 75;
 	this->initFonts();
-	this->gamestate_button = new Button(screenCenter, 100, 150, 50,
+
+	this->titleText = new UIText(screenCenter - 75, 50, 50, &this->font, "THE DEV GAME!");
+	this->titleText->SetTextBackground(40.f,5.f,sf::Color().Black, sf::Color().White, 2.f);
+
+	this->playerInputField = new InputField(screenCenter, 500, 50, &this->font, "PlayerX");
+	this->playerInputField->playerInput = "PlayerX";
+
+	this->nameInputText = new UIText(screenCenter - 175, 500, 50, &this->font, "Nombre: ");
+
+	this->gamestate_button = new Button(screenCenter, 200, 150, 50,
 		&this->font, "New Game",
 		sf::Color::Blue,
 		sf::Color::Red,
 		sf::Color::Green);
 
-	this->gamestate_exit = new Button(screenCenter, 200, 150, 50,
+	this->gamestate_exit = new Button(screenCenter, 300, 150, 50,
 		&this->font, "Exit",
 		sf::Color::Blue,
 		sf::Color::Red,
 		sf::Color::Green);
 
-	this->gamestate_credits = new Button(screenCenter, 300, 150, 50,
+	this->gamestate_credits = new Button(screenCenter, 400, 150, 50,
 		&this->font, "Credits",
 		sf::Color::Blue,
 		sf::Color::Red,
@@ -38,9 +47,12 @@ MainMenuState::MainMenuState(sf::RenderWindow* window, sf::View* view, HighScore
 }
 
 MainMenuState::~MainMenuState() {
+	delete this->titleText;
 	delete this->gamestate_button;
 	delete this->gamestate_exit;
 	delete this->gamestate_credits;
+	delete this->playerInputField;
+	delete this->nameInputText;
 }
 
 const bool& MainMenuState::getQuit() const {
@@ -49,6 +61,8 @@ const bool& MainMenuState::getQuit() const {
 
 void MainMenuState::checkForQuit() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		// HARDCODE QUIT AFTER GAME
+		endState();
 		this->quit = true;
 	}
 }
@@ -59,19 +73,24 @@ void MainMenuState::endState() {
 }
 
 void MainMenuState::updateKeybinds(const float& dt) {
-
+	this->checkForQuit();
 }
 
 void MainMenuState::update(const float& dt) {
+	this->updateKeybinds(dt);
 	this->updateMousePositions();
+	this->playerInputField->update(this->window, ev);
 
 	this->gamestate_button->update(this->mousePositionView);
 	this->gamestate_exit->update(this->mousePositionView);
 	this->gamestate_credits->update(this->mousePositionView);
 
 	if (this->gamestate_button->isPressed()) {
-		this->states->push(new GameState(this->window, this->view, this->highscore, this->states));
+		this->highscore->AddScore(this->playerInputField->playerInput, 0);
+		this->highscore->currentPlayer = std::string(this->playerInputField->playerInput);
+		std::cout << this->highscore->currentPlayer << std::endl;
 		std::cout << "Pressed GAME" << std::endl;
+		this->states->push(new GameState(this->window, this->view, this->highscore, this->states));
 	}
 
 	if (this->gamestate_exit->isPressed()) {
@@ -85,7 +104,10 @@ void MainMenuState::update(const float& dt) {
 }
 
 void MainMenuState::render(sf::RenderTarget* target) {
+	this->titleText->render(target);
 	this->gamestate_button->render(target);
 	this->gamestate_exit->render(target);
 	this->gamestate_credits->render(target);
+	this->nameInputText->render(target);
+	this->playerInputField->render(target);
 }

@@ -57,6 +57,8 @@ void GameState::initVariables() {
 
 	// Init View Center
 	this->view->setCenter(sf::Vector2f(newPlayer.getComponent<Transform>().position.x, newPlayer.getComponent<Transform>().position.y));
+
+	std::cout << "TEST INIT: " << this->highscore->currentPlayer << std::endl;
 }
 
 void GameState::initFonts() {
@@ -196,11 +198,12 @@ void GameState::updateCollision() {
 
 			if (collisionInfo.tag == "Point" && cc->isActive) {
 				cc->SetColliderActive(false);
-				this->highscore->ChangeScore("NewPlayer", 100);
-				std::cout << "AddPoint to score" << std::endl;
+				this->highscore->ChangeScore(this->highscore->currentPlayer, 100);
+				std::cout << "AddPoint to" << this->highscore->currentPlayer << "score" << std::endl;
 			}
 
 			if (collisionInfo.tag == "Enemy" && cc->isActive) {
+				cc->SetColliderActive(false);
 				std::cout << "Player Hit by enemy" << std::endl;
 			}
 
@@ -257,8 +260,8 @@ void GameState::updateView(const float& dt) {
 	this->view->move(sf::Vector2f(movement * dt * 2.f));
 
 	// Set the Score text in the top left of the view
-	this->scoreValue = this->highscore->GetScore("NewPlayer").first;
-	this->textScore->SetText("Score: " + std::to_string(this->scoreValue));
+	this->scoreValue = this->highscore->GetScore(this->highscore->currentPlayer).first;
+	this->textScore->SetText(this->highscore->currentPlayer + " - Score: " + std::to_string(this->scoreValue));
 	this->textScore->SetPosition(this->view->getCenter().x - (this->view->getSize().x/2), this->view->getCenter().y - (this->view->getSize().y / 2));
 }
 
