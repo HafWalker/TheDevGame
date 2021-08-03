@@ -26,7 +26,7 @@ void MainMenuState::initVariables() {
 		sf::Color::Green);
 
 	this->gamestate_credits = new Button(screenCenter, 400, 150, 50,
-		&this->font, "Credits",
+		&this->font, "Scores",
 		sf::Color::Blue,
 		sf::Color::Red,
 		sf::Color::Green);

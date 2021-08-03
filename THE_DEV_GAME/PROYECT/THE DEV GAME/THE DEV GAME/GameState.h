@@ -27,6 +27,7 @@ private:
 	bool inPlayerAttacking;
 
 	bool isLoadingLevel = false;
+	bool isPausePressed = false;
 
 	//Hacks
 	int enemysDirection = 1;

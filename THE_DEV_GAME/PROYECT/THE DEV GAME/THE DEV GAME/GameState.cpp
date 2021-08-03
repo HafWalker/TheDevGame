@@ -103,67 +103,78 @@ void GameState::updateKeybinds(const float& st) {
 
 void GameState::updatePlayerInput() {
 	this->window->pollEvent(ev);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) && !inPlayerAttacking) {
-		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(-0.075f, 0.f));
-		if (!isPlayerJumping) {
-			newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::MOVING_LEFT);
+	if (!isLoadingLevel) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) && !inPlayerAttacking) {
+			newPlayer.getComponent<Rigidbody2D>().move(Vector2D(-0.075f, 0.f));
+			if (!isPlayerJumping) {
+				newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::MOVING_LEFT);
+			}
 		}
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) && !inPlayerAttacking) {
-		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.075f, 0.f));
-		if (!isPlayerJumping) {
-			newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::MOVING_RIGHT);
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) && !inPlayerAttacking) {
+			newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.075f, 0.f));
+			if (!isPlayerJumping) {
+				newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::MOVING_RIGHT);
+			}
 		}
+
+		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+			newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -0.075f));
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+			newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, 0.075f));
+		}*/
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !keyPressed_Space) {
+			keyPressed_Space = true;
+			isPlayerJumping = true;
+			newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::FALLING);
+			//std::cout << "JUMP" << std::endl;
+			newPlayer.getComponent<Rigidbody2D>().Jump(Vector2D(0.f, -40.f));
+			//newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -2.f));
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) && !inPlayerAttacking) {
+			inPlayerAttacking = true;
+			newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::ATTACK);
+			//newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -2.f));
+		}
+
+		if (ev.type == sf::Event::KeyReleased) {
+			if (ev.key.code == sf::Keyboard::Space && keyPressed_Space) {
+				keyPressed_Space = false;
+				//std::cout << "JUMP RELEASE" << std::endl;
+			}
+
+			if (ev.key.code == sf::Keyboard::J) {
+				inPlayerAttacking = false;
+			}
+
+			if (ev.key.code == sf::Keyboard::A ||
+				ev.key.code == sf::Keyboard::D) {
+				newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::IDLE);
+			}
+			//TODO: Return to IDLE animation (ASDW)
+		}
+
+		//if (abs(newPlayer.getComponent<Transform>().velocity.x) < 0.5f && abs(newPlayer.getComponent<Transform>().velocity.y) < 0.5f) {
+		//	isPlayerJumping = false;
+		//	newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::IDLE);
+		//}
+
+		/// TESTING
 	}
 
-	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -0.075f));
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, 0.075f));
-	}*/
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !keyPressed_Space) {
-		keyPressed_Space = true;
-		isPlayerJumping = true;
-		newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::FALLING);
-		//std::cout << "JUMP" << std::endl;
-		newPlayer.getComponent<Rigidbody2D>().Jump(Vector2D(0.f, -40.f));
-		//newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -2.f));
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::J) && !inPlayerAttacking) {
-		inPlayerAttacking = true;
-		newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::ATTACK);
-		//newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -2.f));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P) && !isPausePressed) {
+		std::cout << "Game Pause" << std::endl;
+		isPausePressed = true;
+		isLoadingLevel = !isLoadingLevel;
 	}
 
 	if (ev.type == sf::Event::KeyReleased) {
-		if (ev.key.code == sf::Keyboard::Space && keyPressed_Space) {
-			keyPressed_Space = false;
-			//std::cout << "JUMP RELEASE" << std::endl;
+		if (ev.key.code == sf::Keyboard::P && isPausePressed) {
+			std::cout << "Game Continue" << std::endl;
+			isPausePressed = false;
 		}
-
-		if (ev.key.code == sf::Keyboard::J) {
-			inPlayerAttacking = false;
-		}
-
-		if (ev.key.code == sf::Keyboard::A ||
-			ev.key.code == sf::Keyboard::D) {
-			newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::IDLE);
-		}
-		//TODO: Return to IDLE animation (ASDW)
-	}
-
-	//if (abs(newPlayer.getComponent<Transform>().velocity.x) < 0.5f && abs(newPlayer.getComponent<Transform>().velocity.y) < 0.5f) {
-	//	isPlayerJumping = false;
-	//	newPlayer.getComponent<AnimatorComponent>().setAnimationState(ANIMATION_STATES::IDLE);
-	//}
-
-	/// TESTING
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
-		isLoadingLevel = true;
 	}
 }
 
@@ -216,10 +227,11 @@ void GameState::updateCollision() {
 }
 
 void GameState::update(const float& dt) {
+	this->updatePlayerInput();
+
 	if (!isLoadingLevel) {
 		manager.update();
 		this->updateKeybinds(dt);
-		this->updatePlayerInput();
 		this->updateCollision();
 		this->updateView(dt);
 
