@@ -93,6 +93,12 @@
     <ClInclude Include="EnemyAI.h">
       <Filter>Archivos de encabezado\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="PointComponent.h">
+      <Filter>Archivos de encabezado\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyComponent.h">
+      <Filter>Archivos de encabezado\ECS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

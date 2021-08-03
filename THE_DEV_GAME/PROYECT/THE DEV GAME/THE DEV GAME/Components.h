@@ -8,3 +8,5 @@
 #include "Rigidbody2D.h"
 #include "AnimatorComponent.h"
 #include "EnemyAI.h"
+#include "PointComponent.h"
+#include "EnemyComponent.h"

@@ -7,6 +7,7 @@ class EnemyAI : public Component {
 private:
 	float m_direction;
 	float m_speed;
+	float m_maxDistance;
 	Vector2D m_vectorDirection;
 
 	float m_displacementMaxValue;
@@ -21,11 +22,10 @@ public:
 
 	bool isAlive;
 
-	EnemyAI(Vector2D direction, float speed, float minValue, float maxValue) {
+	EnemyAI(Vector2D direction, float speed, float maxValue) {
 		m_vectorDirection = direction;
 		m_speed = speed;
-		m_displacementMaxValue = maxValue;
-		m_displacementMinValue = minValue;
+		m_maxDistance = maxValue;
 	}
 
 	void init() override {
@@ -37,6 +37,10 @@ public:
 		if (!entity->hasComponents<Rigidbody2D>()) {
 			entity->addComponent<Rigidbody2D>();
 		}
+
+		m_displacementMaxValue = transform->position.x + (m_maxDistance * m_vectorDirection.x);
+		m_displacementMinValue = transform->position.x;
+
 		rigidbody2D = &entity->getComponent<Rigidbody2D>();
 		m_direction = 1.f;
 		timerCounter = 0.f;
@@ -47,7 +51,6 @@ public:
 	void update() override {
 		if (this->isAlive) {
 			CheckMovement();
-
 			rigidbody2D->move(Vector2D(m_vectorDirection.x * m_direction * m_speed, m_vectorDirection.y * m_direction * m_speed));
 			rigidbody2D->Drag();
 		}

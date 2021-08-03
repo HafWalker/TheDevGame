@@ -20,7 +20,7 @@ public:
 		switch (tileID)
 		{
 		case 0:
-			path = "D:/THE_DEV_GAME/PROYECT/Sprites/Tile_Horizontal.png"; // Asset 1 (Tile_Horizontal)
+			path = "D:/THE_DEV_GAME/PROYECT/Sprites/Cuadradodado250.png"; // Asset 1 (Tile_Horizontal)
 			break;
 		case 1:
 			path = "D:/THE_DEV_GAME/PROYECT/Sprites/Tile1.png"; // Asset 2
@@ -33,6 +33,12 @@ public:
 			break;
 		case 4:
 			path = "D:/THE_DEV_GAME/PROYECT/Sprites/Tile_TADerecha.png"; // Asset 4 (Tile Tile_TADerecha)
+			break;
+		case 6:
+			path = "D:/THE_DEV_GAME/PROYECT/Sprites/Tile1.png"; // Asset 4 (Tile Tile_TADerecha)
+			break;
+		case 7:
+			path = "D:/THE_DEV_GAME/PROYECT/Sprites/Tile1.png"; // Asset 4 (Tile Tile_TADerecha)
 			break;
 		default:
 			break;

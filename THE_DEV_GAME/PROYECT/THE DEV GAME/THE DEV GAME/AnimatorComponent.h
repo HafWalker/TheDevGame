@@ -26,6 +26,9 @@ private:
 	int spriteRectX;
 	int spriteRectY;
 
+	int animationOffsetX = -39.f;
+	int animationOffsetY = -14.f;
+
 	int maxFrameOfAnimation;
 	int animationIndex;
 
@@ -93,7 +96,7 @@ public:
 					this->animationTimer.restart();
 				}
 			}
-			this->spriteComponent->SetSpritePosition(-39.f, -14.f);
+			this->spriteComponent->SetSpritePosition(animationOffsetX, animationOffsetY);
 		}
 	}
 
@@ -147,6 +150,11 @@ public:
 				}
 			}
 		}
+	}
+
+	void SetAnimationOffset(int xOffset, int yOffset) {
+		this->animationOffsetX = xOffset;
+		this->animationOffsetY = yOffset;
 	}
 
 	void DebugAnimations(ANIMATION_STATES state) {

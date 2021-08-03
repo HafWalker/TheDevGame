@@ -4,6 +4,8 @@
 
 class TileComponent;
 class Collider2D;
+class PointComponent;
+class EnemyComponent;
 
 class GameState : public State {
 private:
@@ -24,6 +26,8 @@ private:
 	bool isPlayerJumping;
 	bool inPlayerAttacking;
 
+	bool isLoadingLevel = false;
+
 	//Hacks
 	int enemysDirection = 1;
 
@@ -33,7 +37,12 @@ public:
 
 	static std::vector<Collider2D*> colliders;
 	static std::vector<TileComponent*> Tiles;
+	static std::vector<PointComponent*> Points;
+	static std::vector<EnemyComponent*> Enemies;
+
 	static void AddTile(int id, int x, int y);
+	static void PlacePoint(int id, int x, int y);
+	static void PlaceEnemy(int id, int x, int y);
 
 	//Functions
 	void endState();
@@ -42,9 +51,11 @@ public:
 	void updatePlayerInput();
 	void updateCollision();
 	void updateEnemys(const float& dt);
-
+	void updateMapAnimations(const float& dt);
 	void updateView(const float& dt);
 
 	void update(const float& dt);
 	void render(sf::RenderTarget* target = nullptr);
+
+	void ClearMap();
 };

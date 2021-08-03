@@ -6,28 +6,26 @@ Manager manager;
 
 std::vector<Collider2D*> GameState::colliders;
 std::vector<TileComponent*> GameState::Tiles;
+std::vector<PointComponent*> GameState::Points;
+std::vector<EnemyComponent*> GameState::Enemies;
 
 auto& newPlayer(manager.addEntity());
 auto& newPlayerAttackArea(manager.addEntity());
 
-auto& newEnemy(manager.addEntity());
-auto& newEnemyAttackArea(manager.addEntity());
-
-auto& newPoint(manager.addEntity());
+auto& exitEntity(manager.addEntity());
 
 void GameState::initVariables() {
 	std::cout << "Init Variables" << std::endl;
 	keyPressed_Space = false;
 	isPlayerJumping = false;
 	inPlayerAttacking = false;
-
 	this->initFonts();
 
 	this->textScore = new UIText(55,55, 24, &this->font, "Score: 0");
 
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16,12);
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level2_32x21.map", 32, 21);
-	Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level3_32x21_VARIANTE.map", 32, 21);
+	Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level_ConPuntos.map", 32, 21);
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_TEST.map", 16, 12);
 
 	newPlayer.addComponent<Transform>(100, 350, 100, 55, 1);
@@ -52,34 +50,11 @@ void GameState::initVariables() {
 	newPlayerAttackArea.addComponent<Collider2D>("PlayerHitArea", 50.f, 25.f, 50.f, 50.f);
 
 	//newPlayer.getComponent<AnimatorComponent>().SetIdleAnimation(2, 48);
-
-	newEnemy.addComponent<Transform>(300,400, 50, 55, 1);
-	newEnemy.addComponent<SpriteComponent>("D:/THE_DEV_GAME/PROYECT/Sprites/Animation/spritesheet_enemy_full.png");
-	newEnemy.addComponent<AnimatorComponent>(128, 128);
-	newEnemy.addComponent<Collider2D>("Enemy", 0.f, 25.f);
-	newEnemy.addComponent<Rigidbody2D>();
-	newEnemy.addComponent<EnemyAI>(Vector2D(1.f, 0.f), 0.05f, 100.f, 500.f);
-
-	newEnemy.getComponent<Rigidbody2D>().gravity = 0.f;
-	newEnemy.getComponent<EnemyAI>().SetAttackTimer(7.f);
-
-	//Animation settings for enemy
-
-	newEnemy.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ IDLE,2,81 });
-	newEnemy.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ ATTACK,1,81 });
-	newEnemy.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ DIE,0,31 });
-	newEnemy.getComponent<AnimatorComponent>().setAnimationState(IDLE);
-	//newEnemy.getComponent<AnimatorComponent>().SetIdleAnimation(2, 81);
-
-	// Point
-
-	newPoint.addComponent<Transform>(300, 250, 50, 55, 1);
-	newPoint.addComponent<SpriteComponent>("D:/THE_DEV_GAME/PROYECT/Sprites/Animation/spritesheet_point.png");
-	newPoint.addComponent<AnimatorComponent>(128, 128);
-	newPoint.addComponent<Collider2D>("Point", 0.f, 25.f);
-	newPoint.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ IDLE,0,81 });
-	newPoint.getComponent<AnimatorComponent>().setAnimationState(IDLE);
 	
+	// Exit
+	exitEntity.addComponent<Transform>(30 * 50, 19 * 50, 50, 50, 1);
+	exitEntity.addComponent<Collider2D>("Exit", 0.f, 0.f);
+
 	// Init View Center
 	this->view->setCenter(sf::Vector2f(newPlayer.getComponent<Transform>().position.x, newPlayer.getComponent<Transform>().position.y));
 }
@@ -106,6 +81,16 @@ void GameState::AddTile(int id, int x, int y) {
 	tile.addComponent<TileComponent>(x, y, 50, 50, id);
 }
 
+void GameState::PlacePoint(int id, int x, int y) {
+	auto& newPoint(manager.addEntity());
+	newPoint.addComponent<PointComponent>(x, y, 50, 50, id);
+}
+
+void GameState::PlaceEnemy(int id, int x, int y) {
+	auto& newEnemy(manager.addEntity());
+	newEnemy.addComponent<EnemyComponent>(x, y, 50, 50, id);
+}
+
 void GameState::endState() {
 	std::cout << "Ending game stuff" << std::endl;
 }
@@ -129,12 +114,12 @@ void GameState::updatePlayerInput() {
 		}
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
 		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, -0.075f));
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
 		newPlayer.getComponent<Rigidbody2D>().move(Vector2D(0.f, 0.075f));
-	}
+	}*/
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !keyPressed_Space) {
 		keyPressed_Space = true;
@@ -175,8 +160,8 @@ void GameState::updatePlayerInput() {
 
 	/// TESTING
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::N)) {
-
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
+		isLoadingLevel = true;
 	}
 }
 
@@ -211,47 +196,58 @@ void GameState::updateCollision() {
 
 			if (collisionInfo.tag == "Point" && cc->isActive) {
 				cc->SetColliderActive(false);
-				this->highscore->AddScore("NewPlayer", 100);
+				this->highscore->ChangeScore("NewPlayer", 100);
 				std::cout << "AddPoint to score" << std::endl;
 			}
-		}
 
-		//Enemy
-		collisionInfo = Collision::AABB(newEnemy.getComponent<Collider2D>(), *cc);
-		if (collisionInfo.isColliding) {
-			if (collisionInfo.tag == "PlayerHitArea" && inPlayerAttacking && newEnemy.getComponent<EnemyAI>().isAlive) {
-				newEnemy.getComponent<AnimatorComponent>().setAnimationState(DIE);
-				newEnemy.getComponent<EnemyAI>().TakeDamage();
+			if (collisionInfo.tag == "Enemy" && cc->isActive) {
+				std::cout << "Player Hit by enemy" << std::endl;
+			}
+
+			if (collisionInfo.tag == "Exit" && cc->isActive) {
+				//this->isLoadingLevel = true;
+				std::cout << "End of LEVEL" << std::endl;
 			}
 		}
 	}
 }
 
 void GameState::update(const float& dt) {
-	manager.update();
-	this->updateKeybinds(dt);
-	this->updatePlayerInput();
-	this->updateCollision();
-	this->updateView(dt);
+	if (!isLoadingLevel) {
+		manager.update();
+		this->updateKeybinds(dt);
+		this->updatePlayerInput();
+		this->updateCollision();
+		this->updateView(dt);
 
-	if (newPlayer.getComponent<Transform>().velocity.y > 0.f) {
-		keyPressed_Space = false;
+		if (newPlayer.getComponent<Transform>().velocity.y > 0.f) {
+			keyPressed_Space = false;
+		}
+
+		newPlayer.getComponent<AnimatorComponent>().updateDeltaTime(dt);
+		newPlayer.getComponent<Rigidbody2D>().update(dt);
+		// NEED TO UPDATE DT
+		//newPoint.getComponent<AnimatorComponent>().updateDeltaTime(dt);
+
+		newPlayerAttackArea.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position;
+		updateEnemys(dt);
+		updateMapAnimations(dt);
+	} else {
+		//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16, 12);
 	}
-
-	newPlayer.getComponent<AnimatorComponent>().updateDeltaTime(dt);
-	newPlayer.getComponent<Rigidbody2D>().update(dt);
-	newEnemy.getComponent<AnimatorComponent>().updateDeltaTime(dt);
-	newPoint.getComponent<AnimatorComponent>().updateDeltaTime(dt);
-
-	newPlayerAttackArea.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position;
-	updateEnemys(dt);
-
 }
 
 void GameState::updateEnemys(const float& dt) {
-	newEnemy.getComponent<EnemyAI>().UpdateDeltaTime(dt);
-	if (newEnemy.getComponent<EnemyAI>().GetAttackTrigger()) {
-		newEnemy.getComponent<AnimatorComponent>().setAnimationState(ATTACK);
+	
+}
+
+void GameState::updateMapAnimations(const float& dt) {
+	for (auto cc : Points) {
+		cc->entity->getComponent<AnimatorComponent>().updateDeltaTime(dt);
+	}
+
+	for (auto cc : Enemies) {
+		cc->entity->getComponent<AnimatorComponent>().updateDeltaTime(dt);
 	}
 }
 
@@ -277,17 +273,30 @@ void GameState::render(sf::RenderTarget* target) {
 		}
 	}
 
-	this->window->draw(newEnemy.getComponent<SpriteComponent>().GetSprite());
+	for (auto cc : Points) {
+		this->window->draw(cc->entity->getComponent<SpriteComponent>().GetSprite());
+		if (cc->entity->hasComponents<Collider2D>()) {
+			this->window->draw(cc->entity->getComponent<Collider2D>().collider);
+		}
+	}
+
+	for (auto cc : Enemies) {
+		this->window->draw(cc->entity->getComponent<SpriteComponent>().GetSprite());
+		if (cc->entity->hasComponents<Collider2D>()) {
+			this->window->draw(cc->entity->getComponent<Collider2D>().collider);
+		}
+	}
+
 	this->window->draw(newPlayer.getComponent<SpriteComponent>().GetSprite());
-	this->window->draw(newPoint.getComponent<SpriteComponent>().GetSprite());
+	//this->window->draw(newPoint.getComponent<SpriteComponent>().GetSprite());
 
 	//TextureManager::Draw(newPlayer.getComponent<SpriteComponent>().GetSprite());
 
 	// COLLISION DEBUG
-	//this->window->draw(newEnemy.getComponent<Collider2D>().collider);
 	//this->window->draw(newPlayerAttackArea.getComponent<Collider2D>().collider);
 	this->window->draw(newPlayer.getComponent<Collider2D>().collider);
-	this->window->draw(newPoint.getComponent<Collider2D>().collider);
+	//this->window->draw(newPoint.getComponent<Collider2D>().collider);
+	this->window->draw(exitEntity.getComponent<Collider2D>().collider);
 	//
 
 	// SPRITES DEBUG
@@ -296,4 +305,10 @@ void GameState::render(sf::RenderTarget* target) {
 
 	// UI - RENDER
 	this->textScore->render(this->window);
+}
+
+void GameState::ClearMap() {
+	for (auto cc : Tiles) {
+		delete cc;
+	}
 }
