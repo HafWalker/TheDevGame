@@ -26,6 +26,9 @@ void GameState::initVariables() {
 	this->pauseMenu = new PauseMenu(this->window, this->view);
 	this->pauseMenu->init();
 
+	this->endOfLevel = new EndOfLevel(this->window, this->view);
+	this->endOfLevel->init();
+
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16,12);
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level2_32x21.map", 32, 21);
 	Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level_ConPuntos.map", 32, 21);
@@ -80,6 +83,7 @@ GameState::GameState(sf::RenderWindow* window, sf::View* view, HighScore* highsc
 GameState::~GameState() {
 	delete this->textScore;
 	delete this->pauseMenu;
+	delete this->endOfLevel;
 }
 
 void GameState::AddTile(int id, int x, int y) {
@@ -217,12 +221,17 @@ void GameState::updateCollision() {
 			}
 
 			if (collisionInfo.tag == "Enemy" && cc->isActive) {
-				cc->SetColliderActive(false);
+				//cc->SetColliderActive(false);
 				std::cout << "Player Hit by enemy" << std::endl;
 			}
 
-			if (collisionInfo.tag == "Exit" && cc->isActive) {
+			if (collisionInfo.tag == "Exit" && cc->isActive && !isEndOfLevel) {
 				//this->isLoadingLevel = true;
+				isGamePaused = true;
+				isEndOfLevel = true;
+
+				this->endOfLevel->SetPlayerScoreToShow(std::to_string(this->scoreValue));
+
 				std::cout << "End of LEVEL" << std::endl;
 			}
 		}
@@ -254,18 +263,34 @@ void GameState::update(const float& dt) {
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16, 12);
 
 	if (isGamePaused) {
-		this->pauseMenu->update();
 		this->updateMousePositions();
-		this->pauseMenu->updatePauseMenuButtons(this->mousePositionView);
-		if (this->pauseMenu->btn_Continue->isPressed()) {
-			isPausePressed = true;
-			isGamePaused = false;
-			isPausePressed = false;
+		if (!isEndOfLevel) {
+			this->pauseMenu->update();
+			this->pauseMenu->updatePauseMenuButtons(this->mousePositionView);
+			if (this->pauseMenu->btn_Continue->isPressed()) {
+				isPausePressed = true;
+				isGamePaused = false;
+				isPausePressed = false;
+			}
+			if (this->pauseMenu->btn_exit->isPressed()) {
+				isPausePressed = true;
+				isGamePaused = false;
+				this->endState();
+			}
 		}
-		if (this->pauseMenu->btn_exit->isPressed()) {
-			isPausePressed = true;
-			isGamePaused = false;
-			this->endState();
+		else {
+			this->endOfLevel->update();
+			this->endOfLevel->updatePauseMenuButtons(this->mousePositionView);
+			if (this->endOfLevel->btn_Continue->isPressed()) {
+				isPausePressed = true;
+				isGamePaused = false;
+				isPausePressed = false;
+			}
+			if (this->endOfLevel->btn_exit->isPressed()) {
+				isPausePressed = true;
+				isGamePaused = false;
+				this->endState();
+			}
 		}
 	}
 }
@@ -340,7 +365,12 @@ void GameState::render(sf::RenderTarget* target) {
 	this->textScore->render(this->window);
 
 	if (isGamePaused) {
-		this->pauseMenu->render(this->window);
+		if (!isEndOfLevel) {
+			this->pauseMenu->render(this->window);
+		}
+		else {
+			this->endOfLevel->render(this->window);
+		}
 	}
 }
 

@@ -1,20 +1,21 @@
 #pragma once
 #include "Button.h"
 
-class PauseMenu {
+class EndOfLevel {
 private:
 	sf::RenderWindow* window;
 	sf::View* view;
 
 	UIText* titleText;
+	UIText* playerScore;
 
 	sf::RectangleShape background;
 	sf::Font font;
 
 public:
-	PauseMenu(sf::RenderWindow* window, sf::View* view);
-	~PauseMenu();
-	
+	EndOfLevel(sf::RenderWindow* window, sf::View* view);
+	~EndOfLevel();
+
 	Button* btn_Continue;
 	Button* btn_exit;
 
@@ -22,6 +23,8 @@ public:
 	void initFonts();
 	void update();
 	void updatePauseMenuButtons(sf::Vector2f mousePositionView);
+	
+	void SetPlayerScoreToShow(string score);
+
 	void render(sf::RenderTarget* target);
 };
-

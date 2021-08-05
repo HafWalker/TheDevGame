@@ -5,7 +5,7 @@ void MainMenuState::initVariables() {
 	float screenCenter = this->window->getSize().x * .5f - 75;
 	this->initFonts();
 
-	this->titleText = new UIText(screenCenter - 75, 50, 50, &this->font, "THE DEV GAME!");
+	this->titleText = new UIText(this->window->getSize().x * .5f - 75 - 75, 50, 50, &this->font, "THE DEV GAME!");
 	this->titleText->SetTextBackground(40.f,5.f,sf::Color().Black, sf::Color().White, 2.f);
 
 	this->playerInputField = new InputField(screenCenter, 500, 50, &this->font, "PlayerX");

@@ -109,7 +109,10 @@
       <Filter>Archivos de encabezado\UI/UX</Filter>
     </ClInclude>
     <ClInclude Include="PauseMenu.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\UI/UX</Filter>
+    </ClInclude>
+    <ClInclude Include="EndOfLevel.h">
+      <Filter>Archivos de encabezado\UI/UX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -162,7 +165,10 @@
       <Filter>Archivos de encabezado\UI/UX</Filter>
     </ClCompile>
     <ClCompile Include="PauseMenu.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Archivos de encabezado\UI/UX</Filter>
+    </ClCompile>
+    <ClCompile Include="EndOfLevel.cpp">
+      <Filter>Archivos de encabezado\UI/UX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

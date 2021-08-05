@@ -9,6 +9,9 @@ UIText::UIText(float x, float y, int characterSize, sf::Font* textFont, std::str
 	this->text.setCharacterSize(characterSize);
 
 	this->characterSize = characterSize;
+
+	this->startOffsetX = x;
+	this->startOffsetY = y;
 }
 
 UIText::~UIText() {
@@ -41,4 +44,18 @@ void UIText::SetTextBackground(float borderX, float borderY, sf::Color baseColor
 	background.setFillColor(baseColor);
 	background.setOutlineColor(outlineColor);
 	background.setOutlineThickness(outlineWidth);
+}
+
+void UIText::SetMousePositionToView(sf::View* view) {
+	sf::Vector2f inViewPosition = sf::Vector2f(
+		startOffsetX + (view->getCenter().x - view->getSize().x / 2),
+		startOffsetY + (view->getCenter().y - view->getSize().y / 2)
+	);
+
+	this->background.setPosition(inViewPosition);
+
+	this->text.setPosition(
+		inViewPosition.x + (this->background.getGlobalBounds().width * .5f) - (this->text.getGlobalBounds().width * .5f),
+		inViewPosition.y + (this->background.getGlobalBounds().height * .5f) - (this->text.getGlobalBounds().height * .5f) - 10.f
+	);
 }

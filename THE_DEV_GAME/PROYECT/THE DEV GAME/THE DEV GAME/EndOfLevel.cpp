@@ -1,25 +1,28 @@
 #include "stdafx.h"
-#include "PauseMenu.h"
+#include "EndOfLevel.h"
 
-PauseMenu::PauseMenu(sf::RenderWindow* window, sf::View* view) {
+EndOfLevel::EndOfLevel(sf::RenderWindow* window, sf::View* view) {
 	this->initFonts();
 	this->window = window;
 	this->view = view;
 }
 
-PauseMenu::~PauseMenu() {
+EndOfLevel::~EndOfLevel() {
 	delete this->titleText;
+	delete this->playerScore;
 	delete this->btn_Continue;
 	delete this->btn_exit;
 }
 
-void PauseMenu::init() {
-	background.setFillColor(sf::Color(0,0,0,100));
+void EndOfLevel::init() {
+	background.setFillColor(sf::Color(0, 0, 0, 100));
 	background.setSize(this->view->getSize());
 
 	float screenCenter = this->window->getSize().x * .5f - 75;
-	this->titleText = new UIText(screenCenter + 75, 50, 50, &this->font, "PAUSE MENU!");
+	this->titleText = new UIText(screenCenter + 75, 50, 50, &this->font, "END LEVEL!");
 	//this->titleText->SetTextBackground(40.f, 5.f, sf::Color().Black, sf::Color().White, 2.f);
+
+	this->playerScore = new UIText(screenCenter + 75, 400, 50, &this->font, "Score: ");
 
 	this->btn_Continue = new Button(screenCenter, 200, 150, 50,
 		&this->font, "Continue",
@@ -34,13 +37,13 @@ void PauseMenu::init() {
 		sf::Color::Green);
 }
 
-void PauseMenu::initFonts() {
+void EndOfLevel::initFonts() {
 	if (!this->font.loadFromFile("D:/THE_DEV_GAME/PROYECT/Fonts/rainyhearts/rainyhearts.ttf")) {
 		throw("ERROR::MAINMENUSTATE::COULD NOT LOAD FONT");
 	}
 }
 
-void PauseMenu::update() {
+void EndOfLevel::update() {
 
 	if (this->btn_Continue->isPressed()) {
 		std::cout << "Pressed CONTINUE" << std::endl;
@@ -51,12 +54,16 @@ void PauseMenu::update() {
 	}
 }
 
-void PauseMenu::updatePauseMenuButtons(sf::Vector2f mousePositionView) {
+void EndOfLevel::updatePauseMenuButtons(sf::Vector2f mousePositionView) {
 	this->btn_Continue->update(mousePositionView);
 	this->btn_exit->update(mousePositionView);
 }
 
-void PauseMenu::render(sf::RenderTarget* target) {
+void EndOfLevel::SetPlayerScoreToShow(string score) {
+	this->playerScore->SetText("Score: " + score);
+}
+
+void EndOfLevel::render(sf::RenderTarget* target) {
 
 	sf::Vector2f inViewPosition = sf::Vector2f(
 		(view->getCenter().x - view->getSize().x / 2),
@@ -68,9 +75,11 @@ void PauseMenu::render(sf::RenderTarget* target) {
 	this->btn_Continue->SetMousePositionToView(this->view);
 	this->btn_exit->SetMousePositionToView(this->view);
 	this->titleText->SetMousePositionToView(this->view);
+	this->playerScore->SetMousePositionToView(this->view);
 
 	this->window->draw(this->background);
 	this->titleText->render(target);
+	this->playerScore->render(target);
 	this->btn_Continue->render(target);
 	this->btn_exit->render(target);
 }

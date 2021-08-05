@@ -9,6 +9,10 @@ private:
 	sf::RectangleShape background;
 	int characterSize;
 	bool useBackground = false;
+
+	float startOffsetX = 0;
+	float startOffsetY = 0;
+
 public:
 	UIText(float x, float y, int characterSize, sf::Font* textFont, std::string label);
 	~UIText();
@@ -17,5 +21,6 @@ public:
 	void SetText(std::string value);
 	void SetPosition(float x, float y);
 	void SetTextBackground(float borderX, float borderY, sf::Color baseColor, sf::Color outlineColor, float outlineWidth);
+	void SetMousePositionToView(sf::View* view);
 };
 

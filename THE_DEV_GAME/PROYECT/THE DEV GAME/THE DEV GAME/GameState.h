@@ -2,6 +2,7 @@
 #include "State.h"
 #include "UIText.h"
 #include "PauseMenu.h"
+#include "EndOfLevel.h"
 
 class TileComponent;
 class Collider2D;
@@ -18,9 +19,9 @@ private:
 
 	int scoreValue = 0;
 
-	// PauseMenu
-
+	// InGame Menues
 	PauseMenu* pauseMenu;
+	EndOfLevel* endOfLevel;
 
 	// Functions
 	void initVariables();
@@ -33,6 +34,7 @@ private:
 
 	bool isGamePaused = false;
 	bool isPausePressed = false;
+	bool isEndOfLevel = false;
 
 	//Hacks
 	int enemysDirection = 1;
