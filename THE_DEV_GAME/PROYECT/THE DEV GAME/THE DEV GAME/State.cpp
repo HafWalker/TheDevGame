@@ -29,7 +29,7 @@ void State::checkForQuit() {
 }
 
 void State::endState() {
-
+	
 }
 
 void State::updateKeybinds(const float& dt) {

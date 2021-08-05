@@ -25,6 +25,8 @@ Button::Button(float x, float y, float w, float h,
 	this->hoverColor = hoverButtonColor;
 	this->activeColor = activeButtonColor;
 
+	this->startOffsetX = x;
+	this->startOffsetY = y;
 }
 
 Button::~Button() {
@@ -66,4 +68,18 @@ void Button::update(const sf::Vector2f mousePosition) {
 void Button::render(sf::RenderTarget* target) {
 	target->draw(this->shape);
 	target->draw(this->text);
+}
+
+void Button::SetMousePositionToView(sf::View* view) {
+	sf::Vector2f inViewPosition = sf::Vector2f(
+		startOffsetX + (view->getCenter().x - view->getSize().x / 2),
+		startOffsetY + (view->getCenter().y - view->getSize().y / 2)
+	);
+
+	this->shape.setPosition(inViewPosition);
+
+	this->text.setPosition(
+		inViewPosition.x + (this->shape.getGlobalBounds().width * .5f) - (this->text.getGlobalBounds().width * .5f),
+		inViewPosition.y + (this->shape.getGlobalBounds().height * .5f) - (this->text.getGlobalBounds().height * .5f) - 10.f
+	);
 }

@@ -15,6 +15,9 @@ private:
 	sf::Color hoverColor;
 	sf::Color activeColor;
 
+	float startOffsetX = 0;
+	float startOffsetY = 0;
+
 public:
 	Button(float x, float y, float w, float h, 
 		sf::Font* buttonFont, std::string label,
@@ -29,5 +32,7 @@ public:
 	//Function
 	void update(const sf::Vector2f mousePosition);
 	void render(sf::RenderTarget* target);
+
+	void SetMousePositionToView(sf::View* view);
 };
 

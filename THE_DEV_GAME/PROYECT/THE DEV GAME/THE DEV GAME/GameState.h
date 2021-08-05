@@ -1,6 +1,7 @@
 #pragma once
 #include "State.h"
 #include "UIText.h"
+#include "PauseMenu.h"
 
 class TileComponent;
 class Collider2D;
@@ -17,6 +18,10 @@ private:
 
 	int scoreValue = 0;
 
+	// PauseMenu
+
+	PauseMenu* pauseMenu;
+
 	// Functions
 	void initVariables();
 	void initFonts();
@@ -26,7 +31,7 @@ private:
 	bool isPlayerJumping;
 	bool inPlayerAttacking;
 
-	bool isLoadingLevel = false;
+	bool isGamePaused = false;
 	bool isPausePressed = false;
 
 	//Hacks

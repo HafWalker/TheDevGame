@@ -23,6 +23,9 @@ void GameState::initVariables() {
 
 	this->textScore = new UIText(55,55, 24, &this->font, "Score: 0");
 
+	this->pauseMenu = new PauseMenu(this->window, this->view);
+	this->pauseMenu->init();
+
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16,12);
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level2_32x21.map", 32, 21);
 	Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level_ConPuntos.map", 32, 21);
@@ -76,6 +79,7 @@ GameState::GameState(sf::RenderWindow* window, sf::View* view, HighScore* highsc
 
 GameState::~GameState() {
 	delete this->textScore;
+	delete this->pauseMenu;
 }
 
 void GameState::AddTile(int id, int x, int y) {
@@ -103,7 +107,7 @@ void GameState::updateKeybinds(const float& st) {
 
 void GameState::updatePlayerInput() {
 	this->window->pollEvent(ev);
-	if (!isLoadingLevel) {
+	if (!isGamePaused) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) && !inPlayerAttacking) {
 			newPlayer.getComponent<Rigidbody2D>().move(Vector2D(-0.075f, 0.f));
 			if (!isPlayerJumping) {
@@ -167,7 +171,7 @@ void GameState::updatePlayerInput() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P) && !isPausePressed) {
 		std::cout << "Game Pause" << std::endl;
 		isPausePressed = true;
-		isLoadingLevel = !isLoadingLevel;
+		isGamePaused = !isGamePaused;
 	}
 
 	if (ev.type == sf::Event::KeyReleased) {
@@ -199,7 +203,6 @@ void GameState::updateCollision() {
 					newPlayer.getComponent<Rigidbody2D>().Jump(Vector2D(0.f, 0.f));
 					//std::cout << "Colliding with Sealing" << std::endl;
 				}
-			
 			}
 
 			if (collisionInfo.tag == "Collider" && isPlayerJumping && newPlayer.getComponent<AnimatorComponent>().getAnimationEnd(ANIMATION_STATES::FALLING)) {
@@ -229,26 +232,41 @@ void GameState::updateCollision() {
 void GameState::update(const float& dt) {
 	this->updatePlayerInput();
 
-	if (!isLoadingLevel) {
+	if (!isGamePaused) {
 		manager.update();
-		this->updateKeybinds(dt);
-		this->updateCollision();
-		this->updateView(dt);
+	}
+	this->updateKeybinds(dt);
+	this->updateCollision();
+	this->updateView(dt);
 
-		if (newPlayer.getComponent<Transform>().velocity.y > 0.f) {
-			keyPressed_Space = false;
+	if (newPlayer.getComponent<Transform>().velocity.y > 0.f) {
+		keyPressed_Space = false;
+	}
+
+	newPlayer.getComponent<AnimatorComponent>().updateDeltaTime(dt);
+	newPlayer.getComponent<Rigidbody2D>().update(dt);
+	// NEED TO UPDATE DT
+	//newPoint.getComponent<AnimatorComponent>().updateDeltaTime(dt);
+
+	newPlayerAttackArea.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position;
+	updateEnemys(dt);
+	updateMapAnimations(dt);
+	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16, 12);
+
+	if (isGamePaused) {
+		this->pauseMenu->update();
+		this->updateMousePositions();
+		this->pauseMenu->updatePauseMenuButtons(this->mousePositionView);
+		if (this->pauseMenu->btn_Continue->isPressed()) {
+			isPausePressed = true;
+			isGamePaused = false;
+			isPausePressed = false;
 		}
-
-		newPlayer.getComponent<AnimatorComponent>().updateDeltaTime(dt);
-		newPlayer.getComponent<Rigidbody2D>().update(dt);
-		// NEED TO UPDATE DT
-		//newPoint.getComponent<AnimatorComponent>().updateDeltaTime(dt);
-
-		newPlayerAttackArea.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position;
-		updateEnemys(dt);
-		updateMapAnimations(dt);
-	} else {
-		//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16, 12);
+		if (this->pauseMenu->btn_exit->isPressed()) {
+			isPausePressed = true;
+			isGamePaused = false;
+			this->endState();
+		}
 	}
 }
 
@@ -320,6 +338,10 @@ void GameState::render(sf::RenderTarget* target) {
 
 	// UI - RENDER
 	this->textScore->render(this->window);
+
+	if (isGamePaused) {
+		this->pauseMenu->render(this->window);
+	}
 }
 
 void GameState::ClearMap() {
