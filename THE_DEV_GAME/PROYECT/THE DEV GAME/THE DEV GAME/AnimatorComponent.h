@@ -4,7 +4,21 @@
 #include "Components.h"
 #include "Game.h"
 
-enum ANIMATION_STATES { IDLE = 0, MOVING_LEFT, MOVING_RIGHT, JUMPING, FALLING, ATTACK, TAKE_DAMAGE, DIE };
+enum ANIMATION_STATES { 
+	IDLE = 0,
+	MOVING_LEFT, 
+	MOVING_RIGHT, 
+	JUMPING, 
+	FALLING, 
+	ATTACK, 
+	TAKE_DAMAGE, 
+	DIE, 
+	POINT_ERROR, 
+	POINT_OK,
+	PUERTA_CERRADA,
+	PUERTA_ABRIENDO,
+	PUERTA_ABIERTA
+};
 
 struct AnimationSetting {
 public:
@@ -83,6 +97,11 @@ public:
 					// Hardcode Animation checks
 					if (this->animState == ANIMATION_STATES::ATTACK) {
 						setAnimationState(ANIMATION_STATES::IDLE);
+					}
+
+					if (this->animState == ANIMATION_STATES::PUERTA_ABRIENDO) {
+						this->currentFrame.left = 40 * spriteRectX;
+						animationActive = false;
 					}
 
 					this->animationActive = false;

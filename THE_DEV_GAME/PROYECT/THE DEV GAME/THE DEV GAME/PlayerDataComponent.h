@@ -24,6 +24,8 @@ public:
 	}
 
 	void SetHealt(int value) {
-		this->playerHealth = value;
+		if (this->playerHealth > 0) {
+			this->playerHealth = value;
+		}
 	}
 };

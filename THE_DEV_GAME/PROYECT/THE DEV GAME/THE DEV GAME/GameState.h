@@ -37,6 +37,8 @@ private:
 	bool isPausePressed = false;
 	bool isEndOfLevel = false;
 
+	bool isPlayerCloseToDoor = false;
+
 	//Hacks
 	int enemysDirection = 1;
 

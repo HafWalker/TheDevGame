@@ -19,7 +19,7 @@ void EndOfLevel::init() {
 	background.setSize(this->view->getSize());
 
 	float screenCenter = this->window->getSize().x * .5f - 75;
-	this->titleText = new UIText(screenCenter + 75, 50, 50, &this->font, "END LEVEL!");
+	this->titleText = new UIText(screenCenter + 75, 50, 50, &this->font, "END GAME!");
 	//this->titleText->SetTextBackground(40.f, 5.f, sf::Color().Black, sf::Color().White, 2.f);
 
 	this->playerScore = new UIText(screenCenter + 75, 400, 50, &this->font, "Score: ");

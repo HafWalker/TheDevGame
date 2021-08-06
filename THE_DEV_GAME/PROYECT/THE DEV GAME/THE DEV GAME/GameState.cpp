@@ -40,7 +40,7 @@ void GameState::initVariables() {
 	newPlayer.addComponent<AnimatorComponent>(128, 128);
 	newPlayer.addComponent<Collider2D>("Player",0.f,0.f);
 	newPlayer.addComponent<Rigidbody2D>();
-	newPlayer.addComponent<PlayerDataComponent>(100);
+	newPlayer.addComponent<PlayerDataComponent>(10);
 
 	//Animation settings for Player
 
@@ -62,6 +62,13 @@ void GameState::initVariables() {
 	// Exit
 	exitEntity.addComponent<Transform>(30 * 50, 19 * 50, 50, 50, 1);
 	exitEntity.addComponent<Collider2D>("Exit", 0.f, 0.f);
+	exitEntity.addComponent<SpriteComponent>("../Assets/Animation/ExitDoorAnimation.png");
+	exitEntity.addComponent<AnimatorComponent>(52,100);
+	exitEntity.getComponent<AnimatorComponent>().SetAnimationOffset(0.f,-50.f);
+	exitEntity.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ PUERTA_CERRADA,0,1 });
+	exitEntity.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ PUERTA_ABRIENDO,0,40 });
+	exitEntity.getComponent<AnimatorComponent>().AddAnimationSetting(AnimationSetting{ PUERTA_ABIERTA,0,1 });
+	exitEntity.getComponent<AnimatorComponent>().setAnimationState(PUERTA_CERRADA);
 
 	// Init View Center
 	this->view->setCenter(sf::Vector2f(newPlayer.getComponent<Transform>().position.x, newPlayer.getComponent<Transform>().position.y));
@@ -218,6 +225,7 @@ void GameState::updateCollision() {
 
 			if (collisionInfo.tag == "Point" && cc->isActive) {
 				cc->SetColliderActive(false);
+				cc->entity->getComponent<PointComponent>().SwitchPointAnimation();
 				this->highscore->ChangeScore(this->highscore->currentPlayer, 100);
 				std::cout << "AddPoint to" << this->highscore->currentPlayer << "score" << std::endl;
 			}
@@ -263,6 +271,8 @@ void GameState::update(const float& dt) {
 
 	newPlayer.getComponent<AnimatorComponent>().updateDeltaTime(dt);
 	newPlayer.getComponent<Rigidbody2D>().update(dt);
+
+	exitEntity.getComponent<AnimatorComponent>().updateDeltaTime(dt);
 	// NEED TO UPDATE DT
 	//newPoint.getComponent<AnimatorComponent>().updateDeltaTime(dt);
 
@@ -270,6 +280,28 @@ void GameState::update(const float& dt) {
 	updateEnemys(dt);
 	updateMapAnimations(dt);
 	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16, 12);
+
+	// DOOR LOGIC
+
+	float PlayerToDoorDistance = exitEntity.getComponent<Transform>().position.x - newPlayer.getComponent<Transform>().position.x;
+	std::cout << PlayerToDoorDistance << std::endl;
+	std::cout << isPlayerCloseToDoor << std::endl;
+
+	if (PlayerToDoorDistance < 250 && !isPlayerCloseToDoor) {
+		isPlayerCloseToDoor = true;
+		exitEntity.getComponent<AnimatorComponent>().setAnimationState(PUERTA_ABRIENDO);
+	}
+	else if(PlayerToDoorDistance >= 200 && isPlayerCloseToDoor) {
+		exitEntity.getComponent<AnimatorComponent>().setAnimationState(PUERTA_CERRADA);
+		isPlayerCloseToDoor = false;
+	}
+
+	// END GAME AND MENUES
+
+	if (newPlayer.getComponent<PlayerDataComponent>().GetHealt() < 0) {
+		isGamePaused = true;
+		isEndOfLevel = true;
+	}
 
 	if (isGamePaused) {
 		this->updateMousePositions();
@@ -355,7 +387,7 @@ void GameState::render(sf::RenderTarget* target) {
 	}
 
 	this->window->draw(newPlayer.getComponent<SpriteComponent>().GetSprite());
-	//this->window->draw(newPoint.getComponent<SpriteComponent>().GetSprite());
+	this->window->draw(exitEntity.getComponent<SpriteComponent>().GetSprite());
 
 	//TextureManager::Draw(newPlayer.getComponent<SpriteComponent>().GetSprite());
 
