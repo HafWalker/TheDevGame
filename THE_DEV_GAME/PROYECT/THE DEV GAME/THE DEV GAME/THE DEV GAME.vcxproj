@@ -35,7 +35,6 @@
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="PauseMenu.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="PointComponent.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Rigidbody2D.h" />
@@ -61,7 +60,6 @@
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="PauseMenu.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "stdafx.h"
-#include "Player.h"
 #include "TileMap.h"
 #include "State.h"
 #include <vector>

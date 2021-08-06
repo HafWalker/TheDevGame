@@ -20,7 +20,7 @@ public:
 	void init() override {
 		entity->addComponent<Transform>(position.x,	position.y,	50,	50,	1);
 		trasnform = &entity->getComponent<Transform>();
-		entity->addComponent<SpriteComponent>("D:/THE_DEV_GAME/PROYECT/Sprites/Animation/spritesheet_point.png");
+		entity->addComponent<SpriteComponent>("../Assets/Animation/spritesheet_point.png");
 		sprite = &entity->getComponent<SpriteComponent>();
 		entity->addComponent<AnimatorComponent>(128, 128);
 		animator = &entity->getComponent<AnimatorComponent>();

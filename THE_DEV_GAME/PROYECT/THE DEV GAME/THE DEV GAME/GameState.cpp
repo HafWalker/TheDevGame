@@ -29,13 +29,13 @@ void GameState::initVariables() {
 	this->endOfLevel = new EndOfLevel(this->window, this->view);
 	this->endOfLevel->init();
 
-	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_16x12.map", 16,12);
-	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level2_32x21.map", 32, 21);
-	Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level_ConPuntos.map", 32, 21);
-	//Map::LoadMap("D:/THE_DEV_GAME/PROYECT/Sprites/Maps/Level1_TEST.map", 16, 12);
+	//Map::LoadMap("../Assets/Sprites/Maps/Level1_16x12.map", 16,12);
+	//Map::LoadMap("../Assets/Sprites/Maps/Level2_32x21.map", 32, 21);
+	Map::LoadMap("../Assets/Maps/Level_ConPuntos.map", 32, 21);
+	//Map::LoadMap("../Assets/Sprites/Maps/Level1_TEST.map", 16, 12);
 
 	newPlayer.addComponent<Transform>(100, 350, 100, 55, 1);
-	newPlayer.addComponent<SpriteComponent>("D:/THE_DEV_GAME/PROYECT/Sprites/Animation/Player_Full_SpriteSheet.png");
+	newPlayer.addComponent<SpriteComponent>("../Assets/Animation/Player_Full_SpriteSheet.png");
 	newPlayer.addComponent<AnimatorComponent>(128, 128);
 	newPlayer.addComponent<Collider2D>("Player",0.f,0.f);
 	newPlayer.addComponent<Rigidbody2D>();
@@ -68,7 +68,7 @@ void GameState::initVariables() {
 }
 
 void GameState::initFonts() {
-	if (!this->font.loadFromFile("D:/THE_DEV_GAME/PROYECT/Fonts/rainyhearts/rainyhearts.ttf")) {
+	if (!this->font.loadFromFile("../Assets/Fonts/rainyhearts/rainyhearts.ttf")) {
 		throw("ERROR::MAINMENUSTATE::COULD NOT LOAD FONT");
 	}
 }
@@ -205,7 +205,7 @@ void GameState::updateCollision() {
 				newPlayer.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position + collisionInfo.displacement;
 				if (collisionInfo.displacement.y > 0) {
 					newPlayer.getComponent<Rigidbody2D>().Jump(Vector2D(0.f, 0.f));
-					//std::cout << "Colliding with Sealing" << std::endl;
+					//std::cout << "Colliding with ceiling" << std::endl;
 				}
 			}
 
@@ -222,6 +222,9 @@ void GameState::updateCollision() {
 
 			if (collisionInfo.tag == "Enemy" && cc->isActive) {
 				//cc->SetColliderActive(false);
+				newPlayer.getComponent<AnimatorComponent>().setAnimationState(TAKE_DAMAGE);
+				newPlayer.getComponent<Rigidbody2D>().move(collisionInfo.displacement * 0.5f);
+				newPlayer.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position + collisionInfo.displacement;
 				std::cout << "Player Hit by enemy" << std::endl;
 			}
 
@@ -275,7 +278,7 @@ void GameState::update(const float& dt) {
 			if (this->pauseMenu->btn_exit->isPressed()) {
 				isPausePressed = true;
 				isGamePaused = false;
-				this->endState();
+				this->QuitState();
 			}
 		}
 		else {
@@ -289,7 +292,7 @@ void GameState::update(const float& dt) {
 			if (this->endOfLevel->btn_exit->isPressed()) {
 				isPausePressed = true;
 				isGamePaused = false;
-				this->endState();
+				this->QuitState();
 			}
 		}
 	}

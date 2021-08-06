@@ -38,7 +38,7 @@ void EndOfLevel::init() {
 }
 
 void EndOfLevel::initFonts() {
-	if (!this->font.loadFromFile("D:/THE_DEV_GAME/PROYECT/Fonts/rainyhearts/rainyhearts.ttf")) {
+	if (!this->font.loadFromFile("../Assets/Fonts/rainyhearts/rainyhearts.ttf")) {
 		throw("ERROR::MAINMENUSTATE::COULD NOT LOAD FONT");
 	}
 }
@@ -72,7 +72,7 @@ void EndOfLevel::render(sf::RenderTarget* target) {
 
 	this->background.setPosition(inViewPosition);
 
-	this->btn_Continue->SetMousePositionToView(this->view);
+	//this->btn_Continue->SetMousePositionToView(this->view);
 	this->btn_exit->SetMousePositionToView(this->view);
 	this->titleText->SetMousePositionToView(this->view);
 	this->playerScore->SetMousePositionToView(this->view);

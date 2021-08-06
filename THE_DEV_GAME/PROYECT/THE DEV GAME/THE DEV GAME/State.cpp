@@ -23,9 +23,16 @@ const bool& State::getQuit() const {
 
 void State::checkForQuit() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		std::cout << "TEST ESCAPE" << std::endl;
 		this->view->setCenter(sf::Vector2f(this->window->getSize().x/2,this->window->getSize().y/2));
 		this->quit = true;
 	}
+}
+
+void State::QuitState() {
+	std::cout << "QUIT STATE" << std::endl;
+	this->view->setCenter(sf::Vector2f(this->window->getSize().x / 2, this->window->getSize().y / 2));
+	this->quit = true;
 }
 
 void State::endState() {

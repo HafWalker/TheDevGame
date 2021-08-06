@@ -35,7 +35,7 @@ void PauseMenu::init() {
 }
 
 void PauseMenu::initFonts() {
-	if (!this->font.loadFromFile("D:/THE_DEV_GAME/PROYECT/Fonts/rainyhearts/rainyhearts.ttf")) {
+	if (!this->font.loadFromFile("../Assets/Fonts/rainyhearts/rainyhearts.ttf")) {
 		throw("ERROR::MAINMENUSTATE::COULD NOT LOAD FONT");
 	}
 }

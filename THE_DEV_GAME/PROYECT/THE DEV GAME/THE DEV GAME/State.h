@@ -28,6 +28,7 @@ public:
 	const bool& getQuit() const;
 
 	virtual void checkForQuit();
+	virtual void QuitState();
 
 	virtual void endState();
 
