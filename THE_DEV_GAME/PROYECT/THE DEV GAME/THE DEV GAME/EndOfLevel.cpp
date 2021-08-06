@@ -73,9 +73,9 @@ void EndOfLevel::render(sf::RenderTarget* target) {
 	this->background.setPosition(inViewPosition);
 
 	//this->btn_Continue->SetMousePositionToView(this->view);
-	this->btn_exit->SetMousePositionToView(this->view);
-	this->titleText->SetMousePositionToView(this->view);
-	this->playerScore->SetMousePositionToView(this->view);
+	this->btn_exit->SetPositionToView(this->view);
+	this->titleText->SetPositionToView(this->view);
+	this->playerScore->SetPositionToView(this->view);
 
 	this->window->draw(this->background);
 	this->titleText->render(target);

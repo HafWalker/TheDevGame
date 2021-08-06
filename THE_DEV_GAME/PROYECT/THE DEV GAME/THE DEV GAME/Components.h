@@ -10,3 +10,4 @@
 #include "EnemyAI.h"
 #include "PointComponent.h"
 #include "EnemyComponent.h"
+#include "PlayerDataComponent.h"

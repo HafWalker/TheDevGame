@@ -70,7 +70,7 @@ void Button::render(sf::RenderTarget* target) {
 	target->draw(this->text);
 }
 
-void Button::SetMousePositionToView(sf::View* view) {
+void Button::SetPositionToView(sf::View* view) {
 	sf::Vector2f inViewPosition = sf::Vector2f(
 		startOffsetX + (view->getCenter().x - view->getSize().x / 2),
 		startOffsetY + (view->getCenter().y - view->getSize().y / 2)

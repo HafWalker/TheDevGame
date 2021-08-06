@@ -33,6 +33,6 @@ public:
 	void update(const sf::Vector2f mousePosition);
 	void render(sf::RenderTarget* target);
 
-	void SetMousePositionToView(sf::View* view);
+	void SetPositionToView(sf::View* view);
 };
 

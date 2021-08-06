@@ -21,13 +21,14 @@ void GameState::initVariables() {
 	inPlayerAttacking = false;
 	this->initFonts();
 
-	this->textScore = new UIText(55,55, 24, &this->font, "Score: 0");
-
 	this->pauseMenu = new PauseMenu(this->window, this->view);
 	this->pauseMenu->init();
 
 	this->endOfLevel = new EndOfLevel(this->window, this->view);
 	this->endOfLevel->init();
+
+	this->playerGUI = new PlayerGUI(this->window, this->view);
+	this->playerGUI->init();
 
 	//Map::LoadMap("../Assets/Sprites/Maps/Level1_16x12.map", 16,12);
 	//Map::LoadMap("../Assets/Sprites/Maps/Level2_32x21.map", 32, 21);
@@ -39,6 +40,7 @@ void GameState::initVariables() {
 	newPlayer.addComponent<AnimatorComponent>(128, 128);
 	newPlayer.addComponent<Collider2D>("Player",0.f,0.f);
 	newPlayer.addComponent<Rigidbody2D>();
+	newPlayer.addComponent<PlayerDataComponent>(100);
 
 	//Animation settings for Player
 
@@ -81,9 +83,9 @@ GameState::GameState(sf::RenderWindow* window, sf::View* view, HighScore* highsc
 }
 
 GameState::~GameState() {
-	delete this->textScore;
 	delete this->pauseMenu;
 	delete this->endOfLevel;
+	delete this->playerGUI;
 }
 
 void GameState::AddTile(int id, int x, int y) {
@@ -225,6 +227,7 @@ void GameState::updateCollision() {
 				newPlayer.getComponent<AnimatorComponent>().setAnimationState(TAKE_DAMAGE);
 				newPlayer.getComponent<Rigidbody2D>().move(collisionInfo.displacement * 0.5f);
 				newPlayer.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position + collisionInfo.displacement;
+				newPlayer.getComponent<PlayerDataComponent>().SetHealt(newPlayer.getComponent<PlayerDataComponent>().GetHealt() - 1);
 				std::cout << "Player Hit by enemy" << std::endl;
 			}
 
@@ -250,6 +253,9 @@ void GameState::update(const float& dt) {
 	this->updateKeybinds(dt);
 	this->updateCollision();
 	this->updateView(dt);
+
+	this->playerGUI->update();
+	this->playerGUI->SetHealt(newPlayer.getComponent<PlayerDataComponent>().GetHealt());
 
 	if (newPlayer.getComponent<Transform>().velocity.y > 0.f) {
 		keyPressed_Space = false;
@@ -319,14 +325,14 @@ void GameState::updateView(const float& dt) {
 
 	// Set the Score text in the top left of the view
 	this->scoreValue = this->highscore->GetScore(this->highscore->currentPlayer).first;
-	this->textScore->SetText(this->highscore->currentPlayer + " - Score: " + std::to_string(this->scoreValue));
-	this->textScore->SetPosition(this->view->getCenter().x - (this->view->getSize().x/2), this->view->getCenter().y - (this->view->getSize().y / 2));
+	this->playerGUI->SetScore(this->scoreValue);
 }
 
 void GameState::render(sf::RenderTarget* target) {
 
 	this->window->setView(*view);
-	// Render
+
+	// Renders DEBUGS
 	for (auto cc : Tiles) {
 		this->window->draw(cc->entity->getComponent<SpriteComponent>().GetSprite());
 		if (cc->entity->hasComponents<Collider2D>()) {
@@ -337,14 +343,14 @@ void GameState::render(sf::RenderTarget* target) {
 	for (auto cc : Points) {
 		this->window->draw(cc->entity->getComponent<SpriteComponent>().GetSprite());
 		if (cc->entity->hasComponents<Collider2D>()) {
-			this->window->draw(cc->entity->getComponent<Collider2D>().collider);
+			//this->window->draw(cc->entity->getComponent<Collider2D>().collider);
 		}
 	}
 
 	for (auto cc : Enemies) {
 		this->window->draw(cc->entity->getComponent<SpriteComponent>().GetSprite());
 		if (cc->entity->hasComponents<Collider2D>()) {
-			this->window->draw(cc->entity->getComponent<Collider2D>().collider);
+			//this->window->draw(cc->entity->getComponent<Collider2D>().collider);
 		}
 	}
 
@@ -355,9 +361,9 @@ void GameState::render(sf::RenderTarget* target) {
 
 	// COLLISION DEBUG
 	//this->window->draw(newPlayerAttackArea.getComponent<Collider2D>().collider);
-	this->window->draw(newPlayer.getComponent<Collider2D>().collider);
+	//this->window->draw(newPlayer.getComponent<Collider2D>().collider);
 	//this->window->draw(newPoint.getComponent<Collider2D>().collider);
-	this->window->draw(exitEntity.getComponent<Collider2D>().collider);
+	//this->window->draw(exitEntity.getComponent<Collider2D>().collider);
 	//
 
 	// SPRITES DEBUG
@@ -365,7 +371,8 @@ void GameState::render(sf::RenderTarget* target) {
 	//
 
 	// UI - RENDER
-	this->textScore->render(this->window);
+
+	this->playerGUI->render(this->window);
 
 	if (isGamePaused) {
 		if (!isEndOfLevel) {

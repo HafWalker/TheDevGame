@@ -3,6 +3,7 @@
 #include "UIText.h"
 #include "PauseMenu.h"
 #include "EndOfLevel.h"
+#include "PlayerGUI.h"
 
 class TileComponent;
 class Collider2D;
@@ -15,13 +16,13 @@ private:
 
 	// UI
 	sf::Font font;
-	UIText* textScore;
 
 	int scoreValue = 0;
 
 	// InGame Menues
 	PauseMenu* pauseMenu;
 	EndOfLevel* endOfLevel;
+	PlayerGUI* playerGUI;
 
 	// Functions
 	void initVariables();

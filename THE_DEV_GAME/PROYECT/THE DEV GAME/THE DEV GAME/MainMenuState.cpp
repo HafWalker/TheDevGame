@@ -107,7 +107,7 @@ void MainMenuState::render(sf::RenderTarget* target) {
 	this->titleText->render(target);
 	this->gamestate_button->render(target);
 	this->gamestate_exit->render(target);
-	this->gamestate_credits->render(target);
+	//this->gamestate_credits->render(target);
 	this->nameInputText->render(target);
 	this->playerInputField->render(target);
 }

@@ -46,13 +46,15 @@ void UIText::SetTextBackground(float borderX, float borderY, sf::Color baseColor
 	background.setOutlineThickness(outlineWidth);
 }
 
-void UIText::SetMousePositionToView(sf::View* view) {
+void UIText::SetPositionToView(sf::View* view) {
 	sf::Vector2f inViewPosition = sf::Vector2f(
 		startOffsetX + (view->getCenter().x - view->getSize().x / 2),
 		startOffsetY + (view->getCenter().y - view->getSize().y / 2)
 	);
 
-	this->background.setPosition(inViewPosition);
+	if (useBackground) {
+		this->background.setPosition(inViewPosition);
+	}
 
 	this->text.setPosition(
 		inViewPosition.x + (this->background.getGlobalBounds().width * .5f) - (this->text.getGlobalBounds().width * .5f),

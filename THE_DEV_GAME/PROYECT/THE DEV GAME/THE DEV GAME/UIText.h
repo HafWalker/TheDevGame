@@ -21,6 +21,6 @@ public:
 	void SetText(std::string value);
 	void SetPosition(float x, float y);
 	void SetTextBackground(float borderX, float borderY, sf::Color baseColor, sf::Color outlineColor, float outlineWidth);
-	void SetMousePositionToView(sf::View* view);
+	void SetPositionToView(sf::View* view);
 };
 
