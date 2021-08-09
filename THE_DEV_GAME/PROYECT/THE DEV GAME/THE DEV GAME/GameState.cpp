@@ -233,7 +233,7 @@ void GameState::updateCollision() {
 			if (collisionInfo.tag == "Enemy" && cc->isActive) {
 				//cc->SetColliderActive(false);
 				newPlayer.getComponent<AnimatorComponent>().setAnimationState(TAKE_DAMAGE);
-				newPlayer.getComponent<Rigidbody2D>().move(collisionInfo.displacement * 0.5f);
+				newPlayer.getComponent<Rigidbody2D>().move(collisionInfo.displacement * 0.25f);
 				newPlayer.getComponent<Transform>().position = newPlayer.getComponent<Transform>().position + collisionInfo.displacement;
 				newPlayer.getComponent<PlayerDataComponent>().SetHealt(newPlayer.getComponent<PlayerDataComponent>().GetHealt() - 1);
 				std::cout << "Player Hit by enemy" << std::endl;
