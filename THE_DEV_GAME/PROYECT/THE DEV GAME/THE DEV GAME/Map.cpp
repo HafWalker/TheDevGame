@@ -52,7 +52,7 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY) {
 							GameState::PlaceEnemy(stoi(temp_score), xCoord * 50, yCoord * 50);
 						}
 
-						std::cout << xCoord << "." << yCoord << "=" << temp_score << std::endl;
+						//std::cout << xCoord << "." << yCoord << "=" << temp_score << std::endl;
 						xCoord++;
 						if (xCoord > sizeX) {
 							xCoord = 0;

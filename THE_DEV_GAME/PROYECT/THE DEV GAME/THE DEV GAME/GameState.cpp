@@ -35,7 +35,7 @@ void GameState::initVariables() {
 	Map::LoadMap("../Assets/Maps/LEVEL_0.map", 63, 20);
 	//Map::LoadMap("../Assets/Sprites/Maps/Level1_TEST.map", 16, 12);
 
-	newPlayer.addComponent<Transform>(100, 250, 100, 55, 1);
+	newPlayer.addComponent<Transform>(100, 150, 100, 55, 1);
 	newPlayer.addComponent<SpriteComponent>("../Assets/Animation/Player_Full_SpriteSheet.png");
 	newPlayer.addComponent<AnimatorComponent>(128, 128);
 	newPlayer.addComponent<Collider2D>("Player",0.f,0.f);
