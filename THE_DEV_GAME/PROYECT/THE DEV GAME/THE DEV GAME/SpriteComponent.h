@@ -52,6 +52,10 @@ public:
 		spriteDebugBounds.setPosition(xOffset, yOffset);
 	}
 
+	void SetRotationOfSprite(int angle) {
+		sprite.setRotation(angle);
+	}
+
 	void init() override {
 		transform = &entity->getComponent<Transform>();
 	}

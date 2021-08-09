@@ -56,6 +56,7 @@ public:
 	static void PlaceEnemy(int id, int x, int y);
 
 	//Functions
+
 	void endState();
 	void updateKeybinds(const float& st);
 

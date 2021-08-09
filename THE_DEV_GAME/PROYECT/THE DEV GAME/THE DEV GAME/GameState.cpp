@@ -32,10 +32,10 @@ void GameState::initVariables() {
 
 	//Map::LoadMap("../Assets/Sprites/Maps/Level1_16x12.map", 16,12);
 	//Map::LoadMap("../Assets/Sprites/Maps/Level2_32x21.map", 32, 21);
-	Map::LoadMap("../Assets/Maps/Level_ConPuntos.map", 32, 21);
+	Map::LoadMap("../Assets/Maps/LEVEL_0.map", 63, 20);
 	//Map::LoadMap("../Assets/Sprites/Maps/Level1_TEST.map", 16, 12);
 
-	newPlayer.addComponent<Transform>(100, 350, 100, 55, 1);
+	newPlayer.addComponent<Transform>(100, 250, 100, 55, 1);
 	newPlayer.addComponent<SpriteComponent>("../Assets/Animation/Player_Full_SpriteSheet.png");
 	newPlayer.addComponent<AnimatorComponent>(128, 128);
 	newPlayer.addComponent<Collider2D>("Player",0.f,0.f);
@@ -60,7 +60,7 @@ void GameState::initVariables() {
 	//newPlayer.getComponent<AnimatorComponent>().SetIdleAnimation(2, 48);
 	
 	// Exit
-	exitEntity.addComponent<Transform>(30 * 50, 19 * 50, 50, 50, 1);
+	exitEntity.addComponent<Transform>(43 * 50, 19 * 50, 50, 50, 1);
 	exitEntity.addComponent<Collider2D>("Exit", 0.f, 0.f);
 	exitEntity.addComponent<SpriteComponent>("../Assets/Animation/ExitDoorAnimation.png");
 	exitEntity.addComponent<AnimatorComponent>(52,100);
@@ -283,15 +283,19 @@ void GameState::update(const float& dt) {
 
 	// DOOR LOGIC
 
-	float PlayerToDoorDistance = exitEntity.getComponent<Transform>().position.x - newPlayer.getComponent<Transform>().position.x;
-	std::cout << PlayerToDoorDistance << std::endl;
-	std::cout << isPlayerCloseToDoor << std::endl;
+	sf::Vector2f PlayerToDoorDistance = sf::Vector2f(
+		exitEntity.getComponent<Transform>().position.x - newPlayer.getComponent<Transform>().position.x,
+		exitEntity.getComponent<Transform>().position.y - newPlayer.getComponent<Transform>().position.y
+	);
 
-	if (PlayerToDoorDistance < 250 && !isPlayerCloseToDoor) {
+	//std::cout << PlayerToDoorDistance << std::endl;
+	//std::cout << isPlayerCloseToDoor << std::endl;
+
+	if (PlayerToDoorDistance.x < 250 && PlayerToDoorDistance.y < 250 && !isPlayerCloseToDoor) {
 		isPlayerCloseToDoor = true;
 		exitEntity.getComponent<AnimatorComponent>().setAnimationState(PUERTA_ABRIENDO);
 	}
-	else if(PlayerToDoorDistance >= 200 && isPlayerCloseToDoor) {
+	else if(PlayerToDoorDistance.x >= 200 && PlayerToDoorDistance.y >= 200 && isPlayerCloseToDoor) {
 		exitEntity.getComponent<AnimatorComponent>().setAnimationState(PUERTA_CERRADA);
 		isPlayerCloseToDoor = false;
 	}
