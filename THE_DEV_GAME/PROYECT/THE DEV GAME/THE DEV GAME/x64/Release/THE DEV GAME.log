@@ -1,5 +1,68 @@
-﻿  Generando código
-  Previous IPDB not found, fall back to full compilation.
-  All 4 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+﻿  stdafx.cpp
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\TileComponent.h(16,27): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\TileComponent.h(16,24): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\TileComponent.h(17,36): warning C4244: 'argumento': conversión de 'int' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\TileComponent.h(17,33): warning C4244: 'argumento': conversión de 'int' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\Collider2D.h(32,60): warning C4244: 'argumento': conversión de 'int' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\Collider2D.h(32,42): warning C4244: 'argumento': conversión de 'int' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\AnimatorComponent.h(32,39): warning C4244: '=': conversión de 'float' a 'T'; posible pérdida de datos
+          with
+          [
+              T=int
+          ]
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\ECS.h(60,33): warning C4244: 'argumento': conversión de 'const T' a 'int'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\TileComponent.h(42): message : Vea la referencia a la creación de una instancia de la función plantilla "T &Entity::addComponent<Transform,const float&,const float&,const float&,const float&,int>(const float &,const float &,const float &,const float &,int &&)" que se está compilando
+          with
+          [
+              T=Transform
+          ]
+  Collision.cpp
+  Game.cpp
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\ECS.h(60,33): warning C4244: 'argumento': conversión de '_Ty' a 'float'; posible pérdida de datos
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\Game.cpp(22): message : Vea la referencia a la creación de una instancia de la función plantilla "T &Entity::addComponent<Transform,int,int,int,int,int>(int &&,int &&,int &&,int &&,int &&)" que se está compilando
+          with
+          [
+              T=Transform
+          ]
+  Main.cpp
+  Map.cpp
+  Player.cpp
+C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\THE DEV GAME\Player.cpp(108,41): warning C4244: '+=': conversión de 'double' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+  TextureManager.cpp
+  Tile.cpp
+  TileMap.cpp
+  Vector2D.cpp
+  Generando código
+  674 of 674 functions (100.0%) were compiled.
+    670 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Generación de código finalizada
-  THE DEV GAME.vcxproj -> D:\THE_DEV_GAME\PROYECT\THE DEV GAME\x64\Release\THE DEV GAME.exe
+  THE DEV GAME.vcxproj -> C:\Users\Hernan\TheDevGame\THE_DEV_GAME\PROYECT\THE DEV GAME\x64\Release\THE DEV GAME.exe
